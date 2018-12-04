@@ -9,15 +9,17 @@
         android:id="@+id/linearLayout1"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <fragment
-            class="com.example.and_lab.p2pandroidapp.DeviceListFragment"
+            android:name="com.example.and_lab.p2pandroidapp.DeviceListFragment"
             android:id="@+id/frag_list"
             android:layout_width="match_parent"
             android:layout_height="@dimen/phone_list_height">
             <!-- Preview: layout=@layout/row_devices -->
         </fragment>
+
         <fragment
-            class="com.example.and_lab.p2pandroidapp.DeviceDetailFragment"
+            android:name="com.example.and_lab.p2pandroidapp.DeviceDetailFragment"
             android:id="@+id/frag_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

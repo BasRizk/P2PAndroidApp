@@ -1,16 +1,14 @@
 package com.example.and_lab.p2pandroidapp;
 
-import android.app.ListActivity;
-import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
-import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,29 +16,59 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * A ListFragment that displays available peers on discovery and requests the
+ * parent activity to handle user interaction events
+ */
 
-public class DeviceListFragment extends ListFragment implements WifiP2pManager.PeerListListener {
+public class DeviceListFragment extends ListFragment implements PeerListListener {
 
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
 
     ProgressDialog progressDialog = null;
     View mContentView = null;
     private WifiP2pDevice device;
+    ListView listView;
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        listView = getListView(); //EX:
+        listView.setTextFilterEnabled(true);
+
         super.onActivityCreated(savedInstanceState);
         this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
 
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContentView = inflater.inflate(R.layout.device_list, null);
-        return mContentView;
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        mContentView = inflater.inflate(R.layout.device_list, container);
+//        return mContentView;
+//    }
+
+    public WifiP2pDevice getDevice() {
+        return device;
+    }
+
+
+    private static String getDeviceStatus(int deviceStatus) {
+        Log.d(WifiDirectActivity.TAG, "Peer status :" + deviceStatus);
+        switch (deviceStatus) {
+            case WifiP2pDevice.AVAILABLE:
+                return "Available";
+            case WifiP2pDevice.INVITED:
+                return "Invited";
+            case WifiP2pDevice.CONNECTED:
+                return "Connected";
+            case WifiP2pDevice.FAILED:
+                return "Failed";
+            case WifiP2pDevice.UNAVAILABLE:
+                return "Unavailable";
+            default:
+                return "Unknown";
+        }
     }
 
     /**
@@ -89,6 +117,7 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
             return v;
         }
     }
+
     /**
      * Update UI for this device.
      *
@@ -96,16 +125,18 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
      */
     public void updateThisDevice(WifiP2pDevice device) {
         this.device = device;
-        TextView view = (TextView) mContentView.findViewById(R.id.my_name);
-        view.setText(device.deviceName);
-        view = (TextView) mContentView.findViewById(R.id.my_status);
-        view.setText(getDeviceStatus(device.status));
+        TextView view;
+        //view = mContentView.findViewById(R.id.my_name);
+        //view.setText(device.deviceName);
+        //view = mContentView.findViewById(R.id.my_status);
+        //view.setText(getDeviceStatus(device.status));
     }
 
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
 
-        List<WifiP2pDevice> refreshedPeers = (List<WifiP2pDevice>) peerList.getDeviceList();
+        List<WifiP2pDevice> refreshedPeers =
+                new ArrayList<WifiP2pDevice>(peerList.getDeviceList());
 
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -149,33 +180,6 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
                     }
                 });
     }
-
-    public List<WifiP2pDevice> getPeers() {
-        return peers;
-    }
-
-    public WifiP2pDevice getDevice() {
-        return device;
-    }
-
-    private static String getDeviceStatus(int deviceStatus) {
-        Log.d(WifiDirectActivity.TAG, "Peer status :" + deviceStatus);
-        switch (deviceStatus) {
-            case WifiP2pDevice.AVAILABLE:
-                return "Available";
-            case WifiP2pDevice.INVITED:
-                return "Invited";
-            case WifiP2pDevice.CONNECTED:
-                return "Connected";
-            case WifiP2pDevice.FAILED:
-                return "Failed";
-            case WifiP2pDevice.UNAVAILABLE:
-                return "Unavailable";
-            default:
-                return "Unknown";
-        }
-    }
-
 
     /**
      * An interface-callback for the activity to listen to fragment interaction

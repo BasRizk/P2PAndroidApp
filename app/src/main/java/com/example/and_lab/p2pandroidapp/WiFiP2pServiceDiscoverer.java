@@ -20,7 +20,7 @@ public class WiFiP2pServiceDiscoverer {
     private static int SERVER_PORT;
 
     final HashMap<String, String> buddies = new HashMap<String, String>();
-    Map record;
+    private Map record;
 
     public WiFiP2pServiceDiscoverer(WifiP2pManager mManager, Channel mChannel, Context context, int port) {
         this.mManager = mManager;

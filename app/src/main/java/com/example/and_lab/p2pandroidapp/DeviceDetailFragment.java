@@ -1,7 +1,7 @@
 package com.example.and_lab.p2pandroidapp;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WpsInfo;
@@ -10,6 +10,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.and_lab.p2pandroidapp.DeviceListFragment.DeviceActionListener;
+
+
+
+/**
+ * A fragment that manages a particular peer and allows interaction with device
+ * i.e. setting up network connection and transferring data.
+ */
 
 public class DeviceDetailFragment extends Fragment implements ConnectionInfoListener {
 
@@ -34,7 +42,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContentView = inflater.inflate(R.layout.device_detail, null);
+        mContentView = inflater.inflate(R.layout.device_detail, container);
         mContentView.findViewById(R.id.btn_connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,9 +159,9 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     public void showDetails(WifiP2pDevice device) {
         this.device = device;
         this.getView().setVisibility(View.VISIBLE);
-        TextView view = (TextView) mContentView.findViewById(R.id.device_address);
+        TextView view = mContentView.findViewById(R.id.device_address);
         view.setText(device.deviceAddress);
-        view = (TextView) mContentView.findViewById(R.id.device_info);
+        view = mContentView.findViewById(R.id.device_info);
         view.setText(device.toString());
     }
 
@@ -162,13 +170,13 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
      */
     public void resetViews() {
         mContentView.findViewById(R.id.btn_connect).setVisibility(View.VISIBLE);
-        TextView view = (TextView) mContentView.findViewById(R.id.device_address);
+        TextView view = mContentView.findViewById(R.id.device_address);
         view.setText(R.string.empty);
-        view = (TextView) mContentView.findViewById(R.id.device_info);
+        view = mContentView.findViewById(R.id.device_info);
         view.setText(R.string.empty);
-        view = (TextView) mContentView.findViewById(R.id.group_owner);
+        view = mContentView.findViewById(R.id.group_owner);
         view.setText(R.string.empty);
-        view = (TextView) mContentView.findViewById(R.id.status_text);
+        view = mContentView.findViewById(R.id.status_text);
         view.setText(R.string.empty);
         mContentView.findViewById(R.id.btn_start_client).setVisibility(View.GONE);
         this.getView().setVisibility(View.GONE);

@@ -1,32 +1,29 @@
 package com.example.and_lab.p2pandroidapp;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
-import android.widget.Toast;
+
+/**
+ * A BroadcastReceiver that notifies of important wifi p2p events.
+ */
+public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
 
-public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiver {
-
-
-    private WifiP2pManager mManager;
-    private WifiP2pManager.Channel mChannel;
+    private WifiP2pManager manager;
+    private WifiP2pManager.Channel channel;
     private WifiDirectActivity activity;
 
-    DeviceListFragment deviceListFragment;
-    DeviceDetailFragment connectionListener;
-
     public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, WifiDirectActivity context) {
-        this.mManager = manager;
-        this.mChannel = channel;
+        super();
+        this.manager = manager;
+        this.channel = channel;
         this.activity = context;
-        //this.deviceListFragment = new DeviceListFragment();
-        //this.connectionListener = new DeviceDetailFragment();
+
     }
 
     @Override
@@ -53,13 +50,11 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
 
             // Request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
-            // callback on DeviceListFragment.onPeersAvailable()
+            // callback on PeerListListener.onPeersAvailable()
 
-            if(mManager != null) {
-                mManager.requestPeers(mChannel, deviceListFragment);
-                // or ?
-                //mManager.requestPeers(mChannel, (DeviceListFragment) activity.getFragmentManager()
-                  //      .findFragmentById(R.id.device_list_fragment));
+            if(manager != null) {
+                manager.requestPeers(channel, (WifiP2pManager.PeerListListener) activity.getSupportFragmentManager()
+                        .findFragmentById(R.id.frag_list));
             }
             Log.d(WifiDirectActivity.TAG, "P2P peers changed");
 
@@ -68,7 +63,7 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
             // Connection state changed! We should probably do something about
             // that.
 
-            if (mManager == null) {
+            if (manager == null) {
                 return;
             }
 
@@ -77,19 +72,19 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
 
             if (networkInfo.isConnected()) {
 
-                // We are connected with the other device, request connection
+                // we are connected with the other device, request connection
                 // info to find group owner IP
-
                 DeviceDetailFragment fragment = (DeviceDetailFragment) activity
-                        .getFragmentManager().findFragmentById(R.id.frag_detail);
-                mManager.requestConnectionInfo(mChannel, connectionListener);
+                        .getSupportFragmentManager().findFragmentById(R.id.frag_detail);
+                manager.requestConnectionInfo(channel, fragment);
             } else {
+                // It's a disconnect
                 activity.resetData();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
-            DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager()
+            DeviceListFragment fragment = (DeviceListFragment) activity.getSupportFragmentManager()
                     .findFragmentById(R.id.frag_list);
             fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
                     WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
@@ -97,6 +92,7 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
         }
     }
 
+    /*
     //@Override
     public void connect(int peerNumber) {
 
@@ -106,7 +102,7 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
         config.deviceAddress = device.deviceAddress;
         //config.wps.setup = WpsInfo.PBC;
 
-        mManager.connect(mChannel, config, new WifiP2pManager.ActionListener() {
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
 
             @Override
             public void onSuccess() {
@@ -122,7 +118,7 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
             }
         });
 
-        mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
                 String groupPassword = group.getPassphrase();
@@ -132,7 +128,7 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
     }
 
     public void createGroup() {
-        mManager.createGroup(mChannel, new WifiP2pManager.ActionListener() {
+        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
                 // Device is ready to accept incoming connections from peers.
@@ -145,11 +141,13 @@ public class WifiDirectBroadcastReceiver extends android.content.BroadcastReceiv
             }
         });
 
-        mManager.requestGroupInfo(mChannel, new WifiP2pManager.GroupInfoListener() {
+        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group) {
                 // TODO if needed to retrieve group info including peers on the network
             }
         });
     }
+
+    */
 }

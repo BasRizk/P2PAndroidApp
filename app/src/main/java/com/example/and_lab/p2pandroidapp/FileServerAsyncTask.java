@@ -1,5 +1,13 @@
 package com.example.and_lab.p2pandroidapp;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import android.content.DialogInterface;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,15 +17,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+/**
+ * A simple server socket that accepts connection and writes some data on
+ * the stream.
+ */
 
-public class FileServerAsyncTask extends AsyncTask {
+public class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
 
     private Context context;
     private TextView statusText;
@@ -32,7 +37,7 @@ public class FileServerAsyncTask extends AsyncTask {
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
+    protected String doInBackground(Void... voids) {
         try {
 
             /**
@@ -50,7 +55,8 @@ public class FileServerAsyncTask extends AsyncTask {
              */
 
             final File f = new File(Environment.getExternalStorageDirectory() + "/"
-                    + context.getPackageName() + "/wifip2pshared-" + System.currentTimeMillis()
+                    //+ context.getPackageName()
+                    + "/wifip2pshared-" + System.currentTimeMillis()
                     + ".jpg");
 
             File dirs = new File(f.getParent());
@@ -69,12 +75,12 @@ public class FileServerAsyncTask extends AsyncTask {
         }
     }
 
+
     /**
      * Start activity that can handle the JPEG image
      */
     @Override
-    protected void onPostExecute(Object o) {
-        String result = (String) o;
+    protected void onPostExecute(String result) {
         if (result != null) {
             statusText.setText("File copied - " + result);
             Intent intent = new Intent();

@@ -1,5 +1,8 @@
 package com.example.and_lab.p2pandroidapp;
 
+
+import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,11 +12,8 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
-import android.content.BroadcastReceiver;
-
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,8 +21,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import android.support.v7.app.AppCompatActivity;
+
 import com.example.and_lab.p2pandroidapp.DeviceListFragment.DeviceActionListener;
 
+/**
+ * An activity that uses WiFi Direct APIs to discover and connect with available
+ * devices. WiFi Direct APIs are asynchronous and rely on callback mechanism
+ * using interfaces to notify the application of operation success or failure.
+ * The application should also register a BroadcastReceiver for notification of
+ * WiFi state related events.
+ */
 public class WifiDirectActivity extends AppCompatActivity implements ChannelListener, DeviceActionListener {
     public final static String TAG = "WifiDirect";
 
@@ -32,12 +41,12 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
     private final IntentFilter mIntentFilter = new IntentFilter();
     private WifiP2pManager mManager;
     private Channel mChannel;
-    private BroadcastReceiver mReceiver;
+    private BroadcastReceiver mReceiver = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_wifi_direct);
 
         // Indicates a change in the Wi-Fi P2P status.
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -74,11 +83,12 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
      */
     public void resetData() {
 
-        DeviceListFragment fragmentList = (DeviceListFragment) getFragmentManager()
+        DeviceListFragment fragmentList = (DeviceListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frag_list);
 
-        DeviceDetailFragment fragmentDetails = (DeviceDetailFragment) getFragmentManager()
+        DeviceDetailFragment fragmentDetails = (DeviceDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frag_detail);
+
         if (fragmentList != null) {
             fragmentList.clearPeers();
         }
@@ -113,7 +123,7 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
                             Toast.LENGTH_SHORT).show();
                     return true;
                 }
-                final DeviceListFragment fragment = (DeviceListFragment) getFragmentManager()
+                final DeviceListFragment fragment = (DeviceListFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.frag_list);
                 fragment.onInitiateDiscovery();
                 mManager.discoverPeers(mChannel, new ActionListener() {
@@ -136,28 +146,9 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
 
     @Override
     public void showDetails(WifiP2pDevice device) {
-        DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
+        DeviceDetailFragment fragment = (DeviceDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frag_detail);
         fragment.showDetails(device);
-    }
-
-    public void discoverPeers() {
-        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                // Code for when the discovery initiation is successful goes here.
-                // No services have actually been discovered yet, so this method
-                // can often be left blank. Code for peer discovery goes in the
-                // onReceive method, detailed below.
-            }
-
-            @Override
-            public void onFailure(int reasonCode) {
-                // Code for when the discovery initiation fails goes here.
-                // Alert the user that something went wrong.
-            }
-        });
     }
 
     @Override
@@ -177,10 +168,10 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
 
     @Override
     public void disconnect() {
-        final DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
+        final DeviceDetailFragment fragment = (DeviceDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frag_detail);
         fragment.resetViews();
-        mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+        mManager.removeGroup(mChannel, new ActionListener() {
             @Override
             public void onFailure(int reasonCode) {
                 Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
@@ -215,7 +206,7 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
          * request
          */
         if (mManager != null) {
-            final DeviceListFragment fragment = (DeviceListFragment) getFragmentManager()
+            final DeviceListFragment fragment = (DeviceListFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.frag_list);
             if (fragment.getDevice() == null
                     || fragment.getDevice().status == WifiP2pDevice.CONNECTED) {
@@ -239,8 +230,8 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
         }
     }
 
-
-    public void setIsWifiP2pEnabled(boolean b) {
-        this.isWifiP2pEnabled = b;
+    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
+        this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
+
 }
