@@ -14,23 +14,27 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarStyle">
             <Button
                 android:id="@+id/btn_connect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/connect_peer_button" />
+                android:text="@string/connect_peer_button"
+                style="?android:attr/buttonBarButtonStyle"/>
             <Button
                 android:id="@+id/btn_disconnect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/disconnect_peer_button" />
+                android:text="@string/disconnect_peer_button"
+                style="?android:attr/buttonBarButtonStyle"/>
             <Button
                 android:id="@+id/btn_start_client"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/get_file_button"
-                android:visibility="gone" />
+                android:visibility="gone"
+                style="?android:attr/buttonBarButtonStyle"/>
         </LinearLayout>
         <TextView
             android:id="@+id/device_address"

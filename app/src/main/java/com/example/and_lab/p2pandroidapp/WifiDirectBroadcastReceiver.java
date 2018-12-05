@@ -35,9 +35,11 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi P2P is enabled
+                Log.d(WifiDirectActivity.TAG, "WifiDirect is enabled.");
                 activity.setIsWifiP2pEnabled(true);
             } else {
                 // Wi-Fi P2P is not enabled
+                Log.d(WifiDirectActivity.TAG, "WifiDirect is disabled.");
                 activity.setIsWifiP2pEnabled(false);
                 activity.resetData();
             }
@@ -45,16 +47,14 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 
-            // The peer list has changed! We should probably do something about
-            // that.
-
             // Request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
-            // callback on PeerListListener.onPeersAvailable()
+            // callback on DeviceListFragment.onPeersAvailable()
 
             if(manager != null) {
-                manager.requestPeers(channel, (WifiP2pManager.PeerListListener) activity.getSupportFragmentManager()
-                        .findFragmentById(R.id.frag_list));
+                DeviceListFragment deviceListFragment = (DeviceListFragment) activity.getSupportFragmentManager()
+                        .findFragmentById(R.id.frag_list);
+                manager.requestPeers(channel, (WifiP2pManager.PeerListListener) deviceListFragment);
             }
             Log.d(WifiDirectActivity.TAG, "P2P peers changed");
 
@@ -71,83 +71,32 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
             if (networkInfo.isConnected()) {
-
+                Log.d(WifiDirectActivity.TAG, "WifiDirectBroadcastReceiver :: Devices are connected.");
                 // we are connected with the other device, request connection
                 // info to find group owner IP
-                DeviceDetailFragment fragment = (DeviceDetailFragment) activity
+
+                // it notifies deviceDetailFragment that info is available
+                // calling deviceDetailFragment.onConnectionInfoAvailable(WifiP2PInfo info)
+                // TODO probably using this to notifies some fragment which manages the chat would be suitable
+                DeviceDetailFragment deviceDetailFragment = (DeviceDetailFragment) activity
                         .getSupportFragmentManager().findFragmentById(R.id.frag_detail);
-                manager.requestConnectionInfo(channel, fragment);
+                manager.requestConnectionInfo(channel, deviceDetailFragment);
             } else {
+                Log.d(WifiDirectActivity.TAG, "WifiDirectBroadcastReceiver :: Devices are disconnected.");
                 // It's a disconnect
+                // TODO what to do once devices disconnected (maybe) acknowledge user via text, and lock chat
                 activity.resetData();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
-            DeviceListFragment fragment = (DeviceListFragment) activity.getSupportFragmentManager()
+            // TODO once device details have changed what to do!
+            DeviceListFragment deviceListFragment = (DeviceListFragment) activity.getSupportFragmentManager()
                     .findFragmentById(R.id.frag_list);
-            fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(
+            deviceListFragment.updateThisDeviceView((WifiP2pDevice) intent.getParcelableExtra(
                     WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
 
         }
     }
 
-    /*
-    //@Override
-    public void connect(int peerNumber) {
-
-        WifiP2pDevice device = this.deviceListFragment.getPeers().get(peerNumber);
-
-        WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = device.deviceAddress;
-        //config.wps.setup = WpsInfo.PBC;
-
-        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                // WiFiDirectBroadcastReceiver notifies us. Ignore for now.
-                // TODO What happens once connected successfully
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                // TODO What happens if the connection fails
-                Toast.makeText(activity, "Connect failed. Retry.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-            @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group) {
-                String groupPassword = group.getPassphrase();
-            }
-        });
-
-    }
-
-    public void createGroup() {
-        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                // Device is ready to accept incoming connections from peers.
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Toast.makeText(activity, "P2P group creation failed. Retry.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-            @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group) {
-                // TODO if needed to retrieve group info including peers on the network
-            }
-        });
-    }
-
-    */
 }

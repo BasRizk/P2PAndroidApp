@@ -6,6 +6,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+// TODO not used class currently
 public class TCPConnection implements Runnable {
 
     private static final String TAG = "TCP";

@@ -30,29 +30,22 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     ProgressDialog progressDialog = null;
     View mContentView = null;
     private WifiP2pDevice device;
-    ListView listView;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        listView = getListView(); //EX:
-        listView.setTextFilterEnabled(true);
-
         super.onActivityCreated(savedInstanceState);
         this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
-
     }
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        mContentView = inflater.inflate(R.layout.device_list, container);
-//        return mContentView;
-//    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mContentView = inflater.inflate(R.layout.device_list, container);
+        return mContentView;
+    }
 
     public WifiP2pDevice getDevice() {
         return device;
     }
-
-
     private static String getDeviceStatus(int deviceStatus) {
         Log.d(WifiDirectActivity.TAG, "Peer status :" + deviceStatus);
         switch (deviceStatus) {
@@ -76,6 +69,9 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
      */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        // TODO now it directs to the detailsList fragment through the WifiDirectActivity (MainActivity)
+        // it may be needed to be directed accordingly to chat page (fragment)
+        // following a connection directly
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
         ((DeviceActionListener) getActivity()).showDetails(device);
     }
@@ -105,12 +101,17 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             }
             WifiP2pDevice device = items.get(position);
             if (device != null) {
+                // TODO viewAdapter case in case of chatting (may be left as it is)
                 TextView top = (TextView) v.findViewById(R.id.device_name);
                 TextView bottom = (TextView) v.findViewById(R.id.device_details);
                 if (top != null) {
+                    Log.d(WifiDirectActivity.TAG, "WifiPeerListAdapter :: " + position +
+                            " deviceName = '"+ device.deviceName +"'");
                     top.setText(device.deviceName);
                 }
                 if (bottom != null) {
+                    Log.d(WifiDirectActivity.TAG, "WifiPeerListAdapter :: " + position +
+                            " deviceStatus'"+ device.status +"'");
                     bottom.setText(getDeviceStatus(device.status));
                 }
             }
@@ -123,13 +124,13 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
      *
      * @param device WifiP2pDevice object
      */
-    public void updateThisDevice(WifiP2pDevice device) {
+    public void updateThisDeviceView(WifiP2pDevice device) {
         this.device = device;
         TextView view;
-        //view = mContentView.findViewById(R.id.my_name);
-        //view.setText(device.deviceName);
-        //view = mContentView.findViewById(R.id.my_status);
-        //view.setText(getDeviceStatus(device.status));
+        view = mContentView.findViewById(R.id.my_name);
+        view.setText(device.deviceName);
+        view = mContentView.findViewById(R.id.my_status);
+        view.setText(getDeviceStatus(device.status));
     }
 
     @Override
@@ -150,20 +151,22 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             // of the change. For instance, if you have a ListView of
             // available peers, trigger an update.
             ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-
-            // Perform any other updates needed based on the new list of
+            Log.d(WifiDirectActivity.TAG, "WifiPeerListAdapter notified of refreshing peers.");
+            // TODO Perform any other updates needed based on the new list of
             // peers connected to the Wi-Fi P2P network.
+        } else {
+            Log.d(WifiDirectActivity.TAG, "Refreshed peers are the some old peers.");
+
         }
 
         if (peers.size() == 0) {
             Log.d(WifiDirectActivity.TAG, "No devices found");
             return;
         }
-
-
     }
 
     public void clearPeers() {
+        Log.d(WifiDirectActivity.TAG, "Peers to be cleared.");
         peers.clear();
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
     }
@@ -176,20 +179,10 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                 true, new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-
+                        // TODO in case of needed feature after canceling the discovery loading
+                        // TODO might actually be needed to automatically initiate discovery once app is loaded
                     }
                 });
-    }
-
-    /**
-     * An interface-callback for the activity to listen to fragment interaction
-     * events.
-     */
-    public interface DeviceActionListener {
-        void showDetails(WifiP2pDevice device);
-        void cancelDisconnect();
-        void connect(WifiP2pConfig config);
-        void disconnect();
     }
 
 }

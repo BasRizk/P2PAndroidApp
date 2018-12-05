@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="fill_parent">
-    <LinearLayout
+
+    <fragment
+        android:name="com.example.and_lab.p2pandroidapp.DeviceListFragment"
+        android:id="@+id/frag_list"
         android:layout_width="match_parent"
-        android:id="@+id/linearLayout1"
+        android:layout_height="@dimen/phone_list_height"
+        tools:layout="@layout/device_list">
+        <!-- Preview: layout=@layout/row_devices -->
+    </fragment>
+
+    <fragment
+        android:name="com.example.and_lab.p2pandroidapp.DeviceDetailFragment"
+        android:id="@+id/frag_detail"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        tools:layout="@layout/device_detail">
+        <!-- Preview: layout=@layout/device_detail -->
+    </fragment>
 
-        <fragment
-            android:name="com.example.and_lab.p2pandroidapp.DeviceListFragment"
-            android:id="@+id/frag_list"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/phone_list_height">
-            <!-- Preview: layout=@layout/row_devices -->
-        </fragment>
-
-        <fragment
-            android:name="com.example.and_lab.p2pandroidapp.DeviceDetailFragment"
-            android:id="@+id/frag_detail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <!-- Preview: layout=@layout/device_detail -->
-        </fragment>
-    </LinearLayout>
 </LinearLayout>

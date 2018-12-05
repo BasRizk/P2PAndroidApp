@@ -12,6 +12,8 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// TODO not used class currently
 public class WiFiP2pServiceDiscoverer {
 
     private Context context;
