@@ -10,9 +10,12 @@
         android:id="@+id/chat_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="hey"
-        android:textSize="30dp"
+        android:text="@string/developer_name"
+        android:textSize="@dimen/text_main_size"
         android:background="@color/colorPrimary"
+        android:paddingLeft="@dimen/text_padding_horizontal"
+        android:paddingTop="@dimen/text_padding_vertical"
+        android:paddingBottom="@dimen/text_padding_vertical"
         app:layout_constraintTop_toTopOf="parent"/>
 
 
