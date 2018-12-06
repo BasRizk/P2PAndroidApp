@@ -6,5 +6,9 @@
     <dimen name="text_padding_vertical">8dp</dimen>
     <dimen name="text_padding_horizontal">24dp</dimen>
     <dimen name="text_main_size">24dp</dimen>
+    <dimen name="message_size">12dp</dimen>
+    <dimen name="message_padding">8dp</dimen>
+    <dimen name="message_horizontal_margin">8dp</dimen>
+    <dimen name="message_vertical_margin">8dp</dimen>
 
 </resources>
