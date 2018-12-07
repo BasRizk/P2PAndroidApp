@@ -209,6 +209,22 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
     }
 
     @Override
+    public void initializeChatTCPConnection(TCPClient tcpClient) {
+        final ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.chat_screen_frag);
+        chatScreenFragment.addChatConnection(tcpClient);
+        Log.d(WifiDirectActivity.TAG,"Client initiated connection");
+    }
+
+    @Override
+    public void createMessageFromServer(String text, Boolean isSender) {
+        Log.d(WifiDirectActivity.TAG,"CreateMessageFromServer entered");
+        final ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.chat_screen_frag);
+        chatScreenFragment.createMessage(text, false);
+    }
+
+    @Override
     public void onChannelDisconnected() {
         // we will try once more
         if (mManager != null && !retryChannel) {
