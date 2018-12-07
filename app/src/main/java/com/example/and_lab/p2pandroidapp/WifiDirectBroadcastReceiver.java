@@ -79,7 +79,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                 DeviceDetailFragment deviceDetailFragment = (DeviceDetailFragment) activity
                         .getSupportFragmentManager().findFragmentById(R.id.frag_detail);
                 deviceDetailFragment.getView().setVisibility(View.GONE);
-                //manager.requestConnectionInfo(channel, deviceDetailFragment);
+                manager.requestConnectionInfo(channel, deviceDetailFragment);
 
 //                // calling FRAGMENT.onConnectionInfoAvailable(WifiP2PInfo info)
 //                ChatScreenFragment chatScreenFragment = (ChatScreenFragment) activity

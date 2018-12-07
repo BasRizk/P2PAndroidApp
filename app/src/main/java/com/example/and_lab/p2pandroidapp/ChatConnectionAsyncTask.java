@@ -25,6 +25,7 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        Log.d(WifiDirectActivity.TAG, "ChatConnectionAsyncTask is working.");
         if(isGroupOwner) {
             Log.d(WifiDirectActivity.TAG, "Initiating Chatting Connections as (a groupOwner)");
             // Initiate Server Socket, then wait for socket to accept
