@@ -9,19 +9,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
 
-    private Context mContext;
-    private List<Message> mMessageList;
+    private ArrayList<Message> mMessageList;
 
     private static final int VIEW_TYPE_MESSAGE_SENT = 0;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 1;
 
-    public MessageListAdapter(Context context, List<Message> messageList) {
-        mContext = context;
+    public MessageListAdapter(ArrayList<Message> messageList) {
         mMessageList = messageList;
     }
 
@@ -62,10 +61,7 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         Message message = (Message) mMessageList.get(position);
 
-        /**
-         * TODO:    determine which user - ME or OTHER
-         */
-        if (true) {
+        if (!message.sender) {
             // If the current user is the sender of the message
             return VIEW_TYPE_MESSAGE_SENT;
         } else {

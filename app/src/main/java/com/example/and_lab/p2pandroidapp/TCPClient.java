@@ -1,5 +1,8 @@
 package com.example.and_lab.p2pandroidapp;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -12,6 +15,46 @@ public class TCPClient {
     private InetAddress IP_address;
     private Socket clientSocket;
     private DataOutputStream dataOutputStream;
+    private InputStreamReader inputStreamReader;
+    private String recieved_message;
+    private Context context;
+
+    private static final String TAG = "TCP";
+
+
+    public TCPClient(Context context, InetAddress IP_address){
+        this.IP_address = IP_address;
+        this.context = context;
+    }
+
+    public void start(){
+        try {
+            clientSocket = new Socket(IP_address,0);
+            dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+            inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
+            BufferedReader coming_message = new BufferedReader(inputStreamReader);
+            recieved_message = coming_message.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessage(String message){
+        try {
+            dataOutputStream.writeBytes(message + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void tearDown() {
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            Log.e(TAG,"Error Closing the TCP Server");
+            e.printStackTrace();
+        }
+    }
 
     public InetAddress getIP_address() {
         return IP_address;
@@ -51,32 +94,5 @@ public class TCPClient {
 
     public void setRecieved_message(String recieved_message) {
         this.recieved_message = recieved_message;
-    }
-
-    private InputStreamReader inputStreamReader;
-    private String recieved_message;
-
-    public TCPClient(InetAddress IP_address){
-        this.IP_address = IP_address;
-    }
-
-    public void start(){
-        try {
-            clientSocket = new Socket(IP_address,0);
-            dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-            inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
-            BufferedReader coming_message = new BufferedReader(inputStreamReader);
-            recieved_message = coming_message.readLine();
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void sendMessage(String message){
-        try {
-            dataOutputStream.writeBytes(message + "\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

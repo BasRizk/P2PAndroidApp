@@ -6,16 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent">
 
-
-    <!--<fragment-->
-        <!--android:name="com.example.and_lab.p2pandroidapp.ChatScreenFragment"-->
-        <!--android:id="@+id/frag_list2"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--tools:layout="@layout/chat_screen">-->
-        <!--&lt;!&ndash; Preview: layout=@layout/row_devices &ndash;&gt;-->
-    <!--</fragment>-->
-
     <fragment
         android:name="com.example.and_lab.p2pandroidapp.DeviceListFragment"
         android:id="@+id/frag_list"
@@ -32,6 +22,16 @@
         android:layout_height="match_parent"
         tools:layout="@layout/device_detail">
         <!-- Preview: layout=@layout/device_detail -->
+    </fragment>
+
+
+    <fragment
+        android:name="com.example.and_lab.p2pandroidapp.ChatScreenFragment"
+        android:id="@+id/frag_list2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/chat_screen">
+        <!-- Preview: layout=@layout/row_devices -->
     </fragment>
 
 </LinearLayout>

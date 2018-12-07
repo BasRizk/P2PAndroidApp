@@ -44,15 +44,6 @@ public class TCPConnection implements Runnable {
         }
     }
 
-    protected void tearDown() {
-        try {
-            mServerSocket.close();
-        } catch (IOException e) {
-            Log.e(TAG,"Error Closing the TCP Server");
-            e.printStackTrace();
-        }
-    }
-
     protected int getLocalPort() {
         return mLocalPort;
     }
