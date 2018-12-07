@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.net.InetAddress;
 
@@ -25,6 +26,8 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... voids) {
+        Toast.makeText(context, "ChatConnectionAsyncTask began working", Toast.LENGTH_LONG).show();
+
         Log.d(WifiDirectActivity.TAG, "ChatConnectionAsyncTask is working.");
         if(isGroupOwner) {
             Log.d(WifiDirectActivity.TAG, "Initiating Chatting Connections as (a groupOwner)");
@@ -54,6 +57,9 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
                 }
             }
         }
+
+        Toast.makeText(context, "chatConnectionAsyncTask finished working.", Toast.LENGTH_LONG).show();
+
 
 
         return null;

@@ -38,10 +38,11 @@ public class TCPClient {
         try {
             IpAddress.getHostAddress();
 
-            clientSocket = new Socket();
-            clientSocket.bind(null);
-            clientSocket.connect((new InetSocketAddress(IpAddress.getHostAddress(), portNum)), SOCKET_TIMEOUT);
+            //clientSocket = new Socket();
+            //clientSocket.bind(null);
+            //clientSocket.connect((new InetSocketAddress(IpAddress.getHostAddress(), portNum)), SOCKET_TIMEOUT);
 
+            clientSocket = new Socket(IpAddress, portNum);
             dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
             inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
             Log.d(WifiDirectActivity.TAG,
@@ -73,9 +74,9 @@ public class TCPClient {
                     connectionRetries--;
                     this.start();
                 }
-                else
+                else {
                     Toast.makeText(context, "Failed to connect,please try again later.", Toast.LENGTH_LONG).show();
-
+                }
             } catch (InterruptedException e1) {
                 Log.e(WifiDirectActivity.TAG, e1.getMessage());
             }
