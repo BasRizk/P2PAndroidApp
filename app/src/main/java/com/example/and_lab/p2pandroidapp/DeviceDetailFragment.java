@@ -35,9 +35,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     private WifiP2pDevice device;
     private WifiP2pInfo info;
     ProgressDialog progressDialog = null;
-    private TCPClient tcpClient = null;
-    private TCPServer tcpServer = null;
-    private boolean connectBtnClicked = false;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -70,7 +67,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                             }
                         }
                 );
-                connectBtnClicked = true;
                 ((DeviceActionListener) getActivity()).connect(config);
             }
         });
@@ -86,14 +82,17 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         return mContentView;
     }
 
+
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
-        this.info = info;
-        this.getView().setVisibility(View.VISIBLE);
+        //this.info = info;
+        this.getView().setVisibility(View.GONE);
+
+        //this.getView().setVisibility(View.VISIBLE);
         /*
         // JUST UPDATING THE VIEW HERE
         // The owner IP is now known.
@@ -109,36 +108,9 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
         */
 
-        if (connectBtnClicked) {
-            // Probably this btn does not matter however to keep the code safe
-            if (info.groupFormed && info.isGroupOwner) {
-                // Initiate Server Socket, then wait for socket to accept
-                // get socket accepted IP/ADDRESS and create a client socket on its server
-                TCPServer tcpServer = new TCPServer(getActivity());
-                tcpServer.start();
-                InetAddress clientInetAddress = tcpServer.getClientSocket().getInetAddress();
-                TCPClient tcpClient = new TCPClient(getActivity(), clientInetAddress);
-                tcpClient.start();
-                ((DeviceActionListener) getActivity()).transferChatConnection(tcpServer, tcpClient);
 
-            } else if (info.groupFormed) {
-                // Initiate client socket, then server socket and
-                // wait for client coming to server before beginning chat
-                TCPClient tcpClient = new TCPClient(getActivity(), info.groupOwnerAddress);
-                tcpClient.start();
-                TCPServer tcpServer = new TCPServer(getActivity());
-                tcpServer.start();
-                ((DeviceActionListener) getActivity()).transferChatConnection(tcpServer, tcpClient);
 
-            }
-
-            // hide the connect button
-            //mContentView.findViewById(R.id.btn_connect).setVisibility(View.GONE);
-            this.getView().setVisibility(View.GONE);
-        }
-
-       }
-
+   }
 
     /**
      * Updates the UI with device data

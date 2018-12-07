@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
@@ -205,14 +204,6 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
     }
 
     @Override
-    public void transferChatConnection(TCPServer tcpServer, TCPClient tcpClient) {
-        final ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.chat_screen_frag);
-        chatScreenFragment.addChatConnection(tcpServer, tcpClient);
-        Log.d(WifiDirectActivity.TAG,"Client initiated connection");
-    }
-
-    @Override
     public void onChannelDisconnected() {
         // we will try once more
         if (mManager != null && !retryChannel) {
@@ -269,32 +260,5 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
-
-
-    /*
-    // NOT USED METHOD FOR NOW (IGNORE)
-    public void createGroup() {
-        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                // Device is ready to accept incoming connections from peers.
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Toast.makeText(activity, "P2P group creation failed. Retry.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-            @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group) {
-                // TODO if needed to retrieve group info including peers on the network
-            }
-        });
-    }
-
-    */
 
 }

@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
+import android.view.View;
 
 /**
  * A BroadcastReceiver that notifies of important wifi p2p events.
@@ -75,22 +76,28 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                 // we are connected with the other device, request connection
                 // info to find group owner IP
 
-                // it notifies deviceDetailFragment that info is available
-                // calling deviceDetailFragment.onConnectionInfoAvailable(WifiP2PInfo info)
-                // TODO probably using this to notifies some fragment which manages the chat would be suitable
                 DeviceDetailFragment deviceDetailFragment = (DeviceDetailFragment) activity
                         .getSupportFragmentManager().findFragmentById(R.id.frag_detail);
-                manager.requestConnectionInfo(channel, deviceDetailFragment);
+                deviceDetailFragment.getView().setVisibility(View.GONE);
+                //manager.requestConnectionInfo(channel, deviceDetailFragment);
+
+                // calling FRAGMENT.onConnectionInfoAvailable(WifiP2PInfo info)
+                ChatScreenFragment chatScreenFragment = (ChatScreenFragment) activity
+                        .getSupportFragmentManager().findFragmentById(R.id.chat_screen_frag);
+                manager.requestConnectionInfo(channel, chatScreenFragment);
+
+
             } else {
                 Log.d(WifiDirectActivity.TAG, "WifiDirectBroadcastReceiver :: Devices are disconnected.");
                 // It's a disconnect
                 // TODO what to do once devices disconnected (maybe) acknowledge user via text, and lock chat
+                // TODO it is the UI and the Logic changes once wifi disconnection happens
                 activity.resetData();
             }
 
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
 
-            // TODO once device details have changed what to do!
+            // TODO once device details have changed what to do! get name from here just like the list here does
             DeviceListFragment deviceListFragment = (DeviceListFragment) activity.getSupportFragmentManager()
                     .findFragmentById(R.id.frag_list);
             deviceListFragment.updateThisDeviceView((WifiP2pDevice) intent.getParcelableExtra(
