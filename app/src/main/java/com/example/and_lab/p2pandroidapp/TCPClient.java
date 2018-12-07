@@ -2,6 +2,7 @@ package com.example.and_lab.p2pandroidapp;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -12,42 +13,67 @@ import java.net.Socket;
 
 public class TCPClient {
 
-    private InetAddress IP_address;
+    private InetAddress IpAddress;
     private Socket clientSocket;
     private DataOutputStream dataOutputStream;
     private InputStreamReader inputStreamReader;
-    private String recieved_message;
+    private String receivedMessage;
     private Context context;
+    private int portNum;
+    private Thread acceptingMessagesThread;
+    private int connectionRetries;
 
-    public TCPClient(Context context, InetAddress IP_address){
-        this.IP_address = IP_address;
+    public TCPClient(Context context, InetAddress IpAddress){
+        this.IpAddress = IpAddress;
         this.context = context;
+        this.portNum = WifiDirectActivity.PORT_NUM;
+        this.connectionRetries = 5;
     }
 
-    public void start(){
+    protected void start(){
         try {
-            clientSocket = new Socket(IP_address,0);
+
+            clientSocket = new Socket(IpAddress,portNum);
             dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
             inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
-            final BufferedReader coming_message = new BufferedReader(inputStreamReader);
-            new Thread(){
+            Log.d(WifiDirectActivity.TAG,
+                    "Initiated ClientSocket to IP/ " + IpAddress + ", PortNum/ " + portNum);
+            final BufferedReader comingMessage = new BufferedReader(inputStreamReader);
+            acceptingMessagesThread = new Thread(){
                 public void run(){
                     try {
-                        recieved_message = coming_message.readLine();
+                        receivedMessage = comingMessage.readLine();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            }.start();
+            };
+            acceptingMessagesThread.start();
+
+            Log.d(WifiDirectActivity.TAG,
+                    "Starting thread accepting messages by ClientSocket with " +
+                    "IP/" + IpAddress + ",PortNum/" + portNum);
+
         } catch (IOException e) {
+            // TODO notify UI
             e.printStackTrace();
+
+            try {
+                Thread.sleep(1000);
+                connectionRetries--;
+                if(connectionRetries > 0) {
+                    this.start();
+                }
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
-    public void sendMessage(String message){
+    protected void sendMessage(String message){
         try {
             dataOutputStream.writeBytes(message + "\n");
-            Log.d(WifiDirectActivity.TAG,"Message : " + message + " was sent successfully");
+            Log.d(WifiDirectActivity.TAG,"Message: " + message + " was sent successfully");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,12 +88,12 @@ public class TCPClient {
         }
     }
 
-    public InetAddress getIP_address() {
-        return IP_address;
+    public InetAddress getIpAddress() {
+        return IpAddress;
     }
 
-    public void setIP_address(InetAddress IP_address) {
-        this.IP_address = IP_address;
+    public void setIpAddress(InetAddress ipAddress) {
+        this.IpAddress = ipAddress;
     }
 
     public Socket getClientSocket() {
@@ -94,11 +120,11 @@ public class TCPClient {
         this.inputStreamReader = inputStreamReader;
     }
 
-    public String getRecieved_message() {
-        return recieved_message;
+    public String getReceivedMessage() {
+        return receivedMessage;
     }
 
-    public void setRecieved_message(String recieved_message) {
-        this.recieved_message = recieved_message;
+    public void setReceivedMessage(String receivedMessage) {
+        this.receivedMessage = receivedMessage;
     }
 }

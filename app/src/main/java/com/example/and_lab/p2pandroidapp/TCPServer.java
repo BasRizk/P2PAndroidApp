@@ -1,7 +1,6 @@
 package com.example.and_lab.p2pandroidapp;
 
 import android.content.Context;
-import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -10,35 +9,36 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-// TODO not used class currently
-public class TCPConnection {
+public class TCPServer {
 
-    private static final String TAG = "TCP";
     private Context context;
     private ServerSocket mServerSocket;
     private Socket clientSocket;
     private int mLocalPort;
 
-    public TCPConnection(Context context) throws IOException {
+    public TCPServer(Context context) {
         this.context = context;
-        initializeServerSocket();
     }
 
-    private void initializeServerSocket() throws IOException {
+    public void start() {
         try {
             // Initialize a server socket on the next available port.
             mServerSocket = new ServerSocket(0);
             // Store the chosen port.
             mLocalPort = mServerSocket.getLocalPort();
+            Log.d(WifiDirectActivity.TAG, "Initiated ServerSocket on port " + mLocalPort);
+
+            clientSocket = mServerSocket.accept();
+            new Thread(new WorkerRunnable(clientSocket, context)).start();
+            Log.d(WifiDirectActivity.TAG,
+                    "Connected with client with IP/ " + clientSocket.getInetAddress().toString());
 
         } catch (IOException e) {
+            // TODO notify UI
             e.printStackTrace();
         }
 
-        while(true){
-            clientSocket = mServerSocket.accept();
-            new Thread(new WorkerRunnable(clientSocket, context)).start();
-        }
+
     }
 
     protected int getLocalPort() {
@@ -53,7 +53,7 @@ public class TCPConnection {
 
         private Context context;
         private Socket clientSocket = null;
-        private String recieved_message;
+        private String receivedMessage;
 
         public  WorkerRunnable(Socket clientSocket, Context context){
             this.context = context;
@@ -65,8 +65,9 @@ public class TCPConnection {
                 InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(input);
                 while(true){
-                    recieved_message = bufferedReader.readLine();
-                    ((DeviceActionListener) context).createMessageFromServer(recieved_message, false);
+                    // TODO maybe check if ready and sleep for a bit to save effort
+                    receivedMessage = bufferedReader.readLine();
+                    ((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
                 }
             }
             catch (IOException e){

@@ -2,6 +2,7 @@ package com.example.and_lab.p2pandroidapp;
 
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pInfo;
 
 /**
  * An interface-callback for the activity to listen to fragment interaction
@@ -12,6 +13,6 @@ public interface DeviceActionListener {
     void cancelDisconnect();
     void connect(WifiP2pConfig config);
     void disconnect();
-    void initializeChatTCPConnection(TCPClient tcpClient);
+    void transferChatConnection(TCPServer tcpServer, TCPClient tcpClient);
     void createMessageFromServer(String text, Boolean isSender);
 }

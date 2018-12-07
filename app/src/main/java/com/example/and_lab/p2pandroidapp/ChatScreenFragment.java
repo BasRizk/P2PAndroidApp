@@ -24,6 +24,7 @@ public class ChatScreenFragment extends Fragment {
     private MessageListAdapter mMessageAdapter;
     private View mContentView;
     private ArrayList<Message> messageList = new ArrayList<>();
+    private TCPServer tcpServer;
     private TCPClient tcpClient;
 
     @Override
@@ -89,7 +90,8 @@ public class ChatScreenFragment extends Fragment {
         mMessageRecycler.scrollToPosition(messageList.size() - 1);
     }
 
-    public void addChatConnection(TCPClient tcpClient) {
+    public void addChatConnection(TCPServer tcpServer, TCPClient tcpClient) {
+        this.tcpServer = tcpServer;
         this.tcpClient = tcpClient;
     }
 }

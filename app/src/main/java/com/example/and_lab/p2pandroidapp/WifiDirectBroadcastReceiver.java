@@ -49,7 +49,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
             // Request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
-            // callback on DeviceListFragment.onPeersAvailable()
+            // callback on DeviceListFragment.onPeersAvailable(list)
 
             if(manager != null) {
                 DeviceListFragment deviceListFragment = (DeviceListFragment) activity.getSupportFragmentManager()
