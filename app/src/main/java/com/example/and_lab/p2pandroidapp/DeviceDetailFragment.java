@@ -35,6 +35,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     private WifiP2pDevice device;
     private WifiP2pInfo info;
     private ChatConnectionAsyncTask chatConnectionAsyncTask;
+    private boolean connectBtnClicked = false;
 
     ProgressDialog progressDialog = null;
 
@@ -69,6 +70,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                             }
                         }
                 );
+                connectBtnClicked = true;
                 ((DeviceActionListener) getActivity()).connect(config);
             }
         });
@@ -100,10 +102,14 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         view.setText("Group Owner IP - " + info.groupOwnerAddress.getHostAddress());
 
 
-        if (info.groupFormed) {
-            chatConnectionAsyncTask = new ChatConnectionAsyncTask(getActivity(), info.groupOwnerAddress, info.isGroupOwner);
-            chatConnectionAsyncTask.execute();
+        if(connectBtnClicked) {
+            if (info.groupFormed) {
+                chatConnectionAsyncTask = new ChatConnectionAsyncTask(getActivity(), info.groupOwnerAddress, info.isGroupOwner);
+                chatConnectionAsyncTask.execute();
+            }
+            connectBtnClicked = false;
         }
+
 
    }
 
