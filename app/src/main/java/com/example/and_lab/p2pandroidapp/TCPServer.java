@@ -25,12 +25,12 @@ public class TCPServer {
 
     public void tearDown() {
         keepRunning = false;
-//        try {
-//            mServerSocket.close();
-//        } catch (IOException e) {
-//            Log.d(WifiDirectActivity.TAG, "problem closing server socket while tearing down");
-//            e.printStackTrace();
-//        }
+        try {
+            mServerSocket.close();
+        } catch (IOException e) {
+            Log.e(WifiDirectActivity.TAG, e.getMessage());
+            Log.d(WifiDirectActivity.TAG, "problem closing server socket while tearing down");
+        }
     }
 
 
@@ -46,12 +46,11 @@ public class TCPServer {
             new Thread(new WorkerRunnable(clientSocket, context)).start();
             Log.d(WifiDirectActivity.TAG,
                     "Connected with client with IP/ " + clientSocket.getInetAddress().toString());
-            mServerSocket.close();
 
         } catch (IOException e) {
+            Log.e(WifiDirectActivity.TAG, e.getMessage());
             Log.d(WifiDirectActivity.TAG,"Server failed to initiate connection on port " + mLocalPort);
             Toast.makeText(context,"Server failed to connect, please try again later.",Toast.LENGTH_LONG);
-            e.printStackTrace();
         }
 
 
@@ -93,8 +92,8 @@ public class TCPServer {
                 input.close();
             }
             catch (IOException e){
+                Log.e(WifiDirectActivity.TAG, e.getMessage());
                 Log.d(WifiDirectActivity.TAG, "problem in server run thread");
-                e.printStackTrace();
             }
         }
     }

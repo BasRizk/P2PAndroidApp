@@ -63,7 +63,7 @@ public class TCPClient {
                     "IP/" + IpAddress + ",PortNum/" + portNum);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(WifiDirectActivity.TAG, e.getMessage());
 
             try {
 
@@ -77,7 +77,7 @@ public class TCPClient {
                     Toast.makeText(context, "Failed to connect,please try again later.", Toast.LENGTH_LONG).show();
 
             } catch (InterruptedException e1) {
-                e1.printStackTrace();
+                Log.e(WifiDirectActivity.TAG, e1.getMessage());
             }
         }
     }
@@ -87,7 +87,7 @@ public class TCPClient {
             dataOutputStream.writeBytes(message + "\n");
             Log.d(WifiDirectActivity.TAG,"Message: " + message + " was sent successfully");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(WifiDirectActivity.TAG, e.getMessage());
         }
     }
 
@@ -95,8 +95,8 @@ public class TCPClient {
         try {
             clientSocket.close();
         } catch (IOException e) {
+            Log.e(WifiDirectActivity.TAG, e.getMessage());
             Log.e(WifiDirectActivity.TAG,"Error Closing the TCP Server");
-            e.printStackTrace();
         }
     }
 

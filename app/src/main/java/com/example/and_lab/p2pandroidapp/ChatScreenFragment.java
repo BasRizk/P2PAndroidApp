@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -24,17 +25,16 @@ import java.util.List;
 
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 
-public class ChatScreenFragment extends Fragment implements ConnectionInfoListener {
+public class ChatScreenFragment extends Fragment {
 
     private RecyclerView mMessageRecycler;
     private MessageListAdapter mMessageAdapter;
     private View mContentView;
     private ArrayList<Message> messageList = new ArrayList<>();
     private String clientName;
+    ProgressDialog progressDialog;
     private TCPServer tcpServer;
     private TCPClient tcpClient;
-    WifiP2pInfo info;
-    ProgressDialog progressDialog;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -124,6 +124,7 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
         refreshView();
     }
 
+    /*
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
         if (progressDialog != null && progressDialog.isShowing()) {
@@ -132,29 +133,23 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
 
         this.info = info;
 
-        // Probably this btn does not matter however to keep the code safe
-        if (info.groupFormed && info.isGroupOwner) {
-            // Initiate Server Socket, then wait for socket to accept
-            // get socket accepted IP/ADDRESS and create a client socket on its server
-            TCPServer tcpServer = new TCPServer(getActivity());
-            tcpServer.start();
-            if(tcpServer.isConnected()) {
-                InetAddress clientInetAddress = tcpServer.getClientSocket().getInetAddress();
-                TCPClient tcpClient = new TCPClient(getActivity(), clientInetAddress);
-                tcpClient.start();
-            }
-        } else if (info.groupFormed) {
-            // Initiate client socket, then server socket and
-            // wait for client coming to server before beginning chat
-            TCPClient tcpClient = new TCPClient(getActivity(), info.groupOwnerAddress);
-            tcpClient.start();
-            if(tcpClient.isConnected()) {
-                TCPServer tcpServer = new TCPServer(getActivity());
-                tcpServer.start();
-            }
+        if (info.groupFormed) {
+            new ChatConnectionAsyncTask(getActivity(), info.groupOwnerAddress, info.isGroupOwner)
+                    .execute();
         }
 
         this.getView().setVisibility(View.VISIBLE);
+    }
+    */
 
+
+    public void acknowledgeConnectionCreation(ChatConnectionAsyncTask chatConnectionAsyncTask) {
+        if(chatConnectionAsyncTask.isConnected()) {
+            Log.d(WifiDirectActivity.TAG,
+                    "Connection initiated successfully, viewing chatScreenFragment.");
+            this.tcpServer = chatConnectionAsyncTask.getTCPServer();
+            this.tcpClient = chatConnectionAsyncTask.getTCPClient();
+            this.getView().setVisibility(View.VISIBLE);
+        }
     }
 }

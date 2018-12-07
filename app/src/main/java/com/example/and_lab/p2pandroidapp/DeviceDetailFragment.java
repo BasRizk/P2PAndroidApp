@@ -34,6 +34,8 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     private View mContentView = null;
     private WifiP2pDevice device;
     private WifiP2pInfo info;
+    private ChatConnectionAsyncTask chatConnectionAsyncTask;
+
     ProgressDialog progressDialog = null;
 
     @Override
@@ -81,11 +83,10 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             progressDialog.dismiss();
         }
 
-        //this.info = info;
-        this.getView().setVisibility(View.GONE);
+        this.info = info;
 
-        //this.getView().setVisibility(View.VISIBLE);
-        /*
+        this.getView().setVisibility(View.VISIBLE);
+
         // JUST UPDATING THE VIEW HERE
         // The owner IP is now known.
         TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
@@ -98,9 +99,11 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         view = (TextView) mContentView.findViewById(R.id.device_info);
         view.setText("Group Owner IP - " + info.groupOwnerAddress.getHostAddress());
 
-        */
 
-
+        if (info.groupFormed) {
+            chatConnectionAsyncTask = new ChatConnectionAsyncTask(getActivity(), info.groupOwnerAddress, info.isGroupOwner);
+            chatConnectionAsyncTask.execute();
+        }
 
    }
 
@@ -138,4 +141,14 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         this.getView().setVisibility(View.GONE);
     }
 
+    public void acknowledgeConnectionCreation(ChatConnectionAsyncTask chatConnectionAsyncTask) {
+        if(chatConnectionAsyncTask.isConnected()) {
+            Log.d(WifiDirectActivity.TAG,
+                    "Connection initiated successfully, resetting detailFragment.");
+            resetViews();
+            //this.getView().setVisibility(View.GONE);
+        } else {
+            // TODO ack user to repeat in a while
+        }
+    }
 }

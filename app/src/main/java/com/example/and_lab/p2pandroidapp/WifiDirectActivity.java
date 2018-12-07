@@ -1,6 +1,7 @@
 package com.example.and_lab.p2pandroidapp;
 
 
+import android.bluetooth.BluetoothClass;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -260,6 +261,21 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
         final ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.chat_screen_frag);
         chatScreenFragment.createMessage(text, false);
+    }
+
+    @Override
+    public void acknowledgeConnectionCreation(ChatConnectionAsyncTask chatConnectionAsyncTask) {
+//        DeviceListFragment deviceListFragment = (DeviceListFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.frag_list);
+//        deviceDetailFragment.acknowledgeConnectionCreation(chatConnectionAsyncTask);
+
+        DeviceDetailFragment deviceDetailFragment = (DeviceDetailFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.frag_detail);
+        deviceDetailFragment.acknowledgeConnectionCreation(chatConnectionAsyncTask);
+
+        ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.chat_screen_frag);
+        chatScreenFragment.acknowledgeConnectionCreation(chatConnectionAsyncTask);
     }
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
