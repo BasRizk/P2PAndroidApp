@@ -38,10 +38,11 @@ public class TCPClient {
         try {
             IpAddress.getHostAddress();
 
-            clientSocket = new Socket();
-            clientSocket.bind(null);
-            clientSocket.connect((new InetSocketAddress(IpAddress.getHostAddress(), portNum)), SOCKET_TIMEOUT);
+            //clientSocket = new Socket();
+            //clientSocket.bind(null);
+            //clientSocket.connect((new InetSocketAddress(IpAddress.getHostAddress(), portNum)), SOCKET_TIMEOUT);
 
+            clientSocket = new Socket(IpAddress, portNum);
             dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
             inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
             Log.d(WifiDirectActivity.TAG,
