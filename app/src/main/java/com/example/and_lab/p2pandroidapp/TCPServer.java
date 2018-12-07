@@ -2,6 +2,7 @@ package com.example.and_lab.p2pandroidapp;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,7 +49,8 @@ public class TCPServer {
             mServerSocket.close();
 
         } catch (IOException e) {
-            // TODO notify UI
+            Log.d(WifiDirectActivity.TAG,"Server failed to initiate connection on port " + mLocalPort);
+            Toast.makeText(context,"Server failed to connect, please try again later.",Toast.LENGTH_LONG);
             e.printStackTrace();
         }
 

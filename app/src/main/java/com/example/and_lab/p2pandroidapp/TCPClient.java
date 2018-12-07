@@ -3,6 +3,7 @@ package com.example.and_lab.p2pandroidapp;
 import android.content.Context;
 import android.util.Log;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -55,15 +56,19 @@ public class TCPClient {
                     "IP/" + IpAddress + ",PortNum/" + portNum);
 
         } catch (IOException e) {
-            // TODO notify UI
             e.printStackTrace();
 
             try {
-                Thread.sleep(1000);
-                connectionRetries--;
+
                 if(connectionRetries > 0) {
+                    Toast.makeText(context,"Retrying to connect in 1 second.",Toast.LENGTH_SHORT).show();
+                    Thread.sleep(1000);
+                    connectionRetries--;
                     this.start();
                 }
+                else
+                    Toast.makeText(context, "Failed to connect,please try again later.", Toast.LENGTH_LONG).show();
+
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
