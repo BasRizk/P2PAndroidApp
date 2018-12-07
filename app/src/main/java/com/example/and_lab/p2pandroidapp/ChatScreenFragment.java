@@ -24,6 +24,7 @@ public class ChatScreenFragment extends Fragment {
     private MessageListAdapter mMessageAdapter;
     private View mContentView;
     private ArrayList<Message> messageList = new ArrayList<>();
+    private String clientName;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -50,21 +51,6 @@ public class ChatScreenFragment extends Fragment {
         layoutManager.setStackFromEnd(true);
         mMessageRecycler.setLayoutManager(layoutManager);
         mMessageRecycler.setAdapter(mMessageAdapter);
-        messageList.add(new Message("hi boy", false));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", false));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", false));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", false));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", false));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-
-        messageList.add(new Message("hi boyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", true));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", true));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
 
         return mContentView;
     }
@@ -84,6 +70,24 @@ public class ChatScreenFragment extends Fragment {
         messageList.add(new Message(text, isSender));
         mMessageAdapter.notifyItemInserted(messageList.size() - 1);
         mMessageRecycler.scrollToPosition(messageList.size() - 1);
+    }
+
+    public void resetView() {
+        messageList.clear();
+        clientName = "";
+        TextView editTextChatbox = (TextView) (mContentView.findViewById(R.id.edittext_chatbox));
+        editTextChatbox.setText("");
+    }
+
+    public void backClicked() {
+
+    }
+
+    public void refreshView() {
+        mContentView.setVisibility(View.VISIBLE);
+        TextView chatTitle = mContentView.findViewById(R.id.chat_title);
+        if(clientName != null)
+            chatTitle.setText(clientName);
     }
 
 }

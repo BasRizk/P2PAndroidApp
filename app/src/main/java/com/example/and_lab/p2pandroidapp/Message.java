@@ -9,6 +9,7 @@ public class Message {
     public Message(String message, boolean isSender) {
         this.message = message;
         this.isSender = isSender;
+        this.createdAt = System.currentTimeMillis();
     }
 
     public String getMessage() {
