@@ -15,22 +15,40 @@
         <!-- Preview: layout=@layout/row_devices -->
     </fragment>
 
-    <fragment
-        android:name="com.example.and_lab.p2pandroidapp.DeviceListFragment"
-        android:id="@+id/frag_list"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/phone_list_height"
-        tools:layout="@layout/device_list">
-        <!-- Preview: layout=@layout/row_devices -->
-    </fragment>
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <fragment
+                android:name="com.example.and_lab.p2pandroidapp.DeviceListFragment"
+                android:id="@+id/frag_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/device_list">
+                <!-- Preview: layout=@layout/row_devices -->
+            </fragment>
+        </LinearLayout>
+    </ScrollView>
 
-    <fragment
-        android:name="com.example.and_lab.p2pandroidapp.DeviceDetailFragment"
-        android:id="@+id/frag_detail"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/device_detail">
-        <!-- Preview: layout=@layout/device_detail -->
-    </fragment>
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <fragment
+                    android:name="com.example.and_lab.p2pandroidapp.DeviceDetailFragment"
+                    android:id="@+id/frag_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout="@layout/device_detail">
+                    <!-- Preview: layout=@layout/device_detail -->
+            </fragment>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
