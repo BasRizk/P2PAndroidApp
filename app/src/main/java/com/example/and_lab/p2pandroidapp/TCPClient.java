@@ -10,9 +10,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class TCPClient {
+
+    private static final int SOCKET_TIMEOUT = 5000;
 
     private InetAddress IpAddress;
     private Socket clientSocket;
@@ -33,8 +36,12 @@ public class TCPClient {
 
     protected void start(){
         try {
+            IpAddress.getHostAddress();
 
-            clientSocket = new Socket(IpAddress,portNum);
+            clientSocket = new Socket();
+            clientSocket.bind(null);
+            clientSocket.connect((new InetSocketAddress(IpAddress.getHostAddress(), portNum)), SOCKET_TIMEOUT);
+
             dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
             inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
             Log.d(WifiDirectActivity.TAG,
