@@ -32,7 +32,8 @@
 
 
         <activity android:name=".WifiDirectActivity"
-            android:label="@string/app_name" android:launchMode="singleTask">
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
 
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"

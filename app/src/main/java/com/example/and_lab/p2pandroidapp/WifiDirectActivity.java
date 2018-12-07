@@ -59,7 +59,7 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         //mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-
+        Log.d(TAG, "onCreate :: DONE");
     }
 
     /** register the WifiDirectBroadcastReceiver with the intent values to be matched */
@@ -276,6 +276,12 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
         ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.chat_screen_frag);
         chatScreenFragment.acknowledgeConnectionCreation(chatConnectionAsyncTask);
+
+        if(!chatConnectionAsyncTask.isConnected()) {
+            Toast.makeText(this, "Connection failed!", Toast.LENGTH_SHORT);
+            Log.d(WifiDirectActivity.TAG, "WifiDirectActivity :: ACK connection failed.");
+            disconnect();
+        }
     }
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
