@@ -3,12 +3,12 @@ package com.example.and_lab.p2pandroidapp;
 
 public class Message {
     String message;
-    Boolean sender;
+    Boolean isSender;
     long createdAt;
 
-    public Message(String message, boolean sender) {
+    public Message(String message, boolean isSender) {
         this.message = message;
-        this.sender = sender;
+        this.isSender = isSender;
     }
 
     public String getMessage() {
@@ -19,12 +19,12 @@ public class Message {
         this.message = message;
     }
 
-    public Boolean getSender() {
-        return sender;
+    public Boolean getIsSender() {
+        return isSender;
     }
 
-    public void setSender(Boolean sender) {
-        this.sender = sender;
+    public void setIsSender(Boolean isSender) {
+        this.isSender = isSender;
     }
 
     public long getCreatedAt() {

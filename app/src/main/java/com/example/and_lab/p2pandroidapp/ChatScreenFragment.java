@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,15 @@ public class ChatScreenFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Button sendButton = (Button) mContentView.findViewById(R.id.button_chatbox_send);
+        sendButton.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                sendClicked();
+            }
+        });
     }
 
     @Override
@@ -35,25 +47,43 @@ public class ChatScreenFragment extends Fragment {
         mMessageAdapter = new MessageListAdapter(messageList);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setStackFromEnd(true);
         mMessageRecycler.setLayoutManager(layoutManager);
         mMessageRecycler.setAdapter(mMessageAdapter);
-        messageList.add(new Message("hi boy", true));
+        messageList.add(new Message("hi boy", false));
         mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", true));
+        messageList.add(new Message("hi boy", false));
         mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", true));
+        messageList.add(new Message("hi boy", false));
         mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", true));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-        messageList.add(new Message("hi boy", true));
-        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
-
-        messageList.add(new Message("hi boyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", false));
+        messageList.add(new Message("hi boy", false));
         mMessageAdapter.notifyItemInserted(messageList.size() - 1);
         messageList.add(new Message("hi boy", false));
         mMessageAdapter.notifyItemInserted(messageList.size() - 1);
 
+        messageList.add(new Message("hi boyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", true));
+        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
+        messageList.add(new Message("hi boy", true));
+        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
+
         return mContentView;
+    }
+
+    public void sendClicked() {
+        TextView editTextChatbox = (TextView) (mContentView.findViewById(R.id.edittext_chatbox));
+
+        if(editTextChatbox.getText() != null && editTextChatbox.getText().toString() != null
+                && !editTextChatbox.getText().toString().equals("")) {
+            String messageText = editTextChatbox.getText().toString();
+            createMessage(messageText, true);
+            editTextChatbox.setText("");
+        }
+    }
+
+    public void createMessage(String text, Boolean isSender) {
+        messageList.add(new Message(text, isSender));
+        mMessageAdapter.notifyItemInserted(messageList.size() - 1);
+        mMessageRecycler.scrollToPosition(messageList.size() - 1);
     }
 
 }

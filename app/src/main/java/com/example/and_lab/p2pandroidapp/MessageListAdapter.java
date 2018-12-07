@@ -1,7 +1,5 @@
 package com.example.and_lab.p2pandroidapp;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +8,6 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class MessageListAdapter extends RecyclerView.Adapter {
@@ -56,13 +53,13 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         return mMessageList.size();
     }
 
-    // Determines the appropriate ViewType according to the sender of the message.
+    // Determines the appropriate ViewType according to the isSender of the message.
     @Override
     public int getItemViewType(int position) {
         Message message = (Message) mMessageList.get(position);
 
-        if (!message.sender) {
-            // If the current user is the sender of the message
+        if (message.isSender) {
+            // If the current user is the isSender of the message
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
             // If some other user sent the message
