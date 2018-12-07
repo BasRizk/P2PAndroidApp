@@ -41,7 +41,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContentView = inflater.inflate(R.layout.device_list, container);
+        mContentView = inflater.inflate(R.layout.device_list, container, false);
         return mContentView;
     }
 
