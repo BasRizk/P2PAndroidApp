@@ -36,28 +36,28 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
             // get socket accepted IP/ADDRESS and create a client socket on its server
             tcpServer = new TCPServer(context);
             tcpServer.start();
-            if(tcpServer.isConnected()) {
-                InetAddress clientInetAddress =
-                        ((InetSocketAddress) tcpServer.getClientSocket().getRemoteSocketAddress()).getAddress();
-                TCPClient tcpClient = new TCPClient(context, clientInetAddress);
-                tcpClient.start();
-                if(tcpClient.isConnected()) {
-                    isConnected = true;
-                }
-            }
+//            if(tcpServer.isConnected()) {
+//                InetAddress clientInetAddress =
+//                        ((InetSocketAddress) tcpServer.getClientSocket().getRemoteSocketAddress()).getAddress();
+//                TCPClient tcpClient = new TCPClient(context, clientInetAddress);
+//                tcpClient.start();
+//                if(tcpClient.isConnected()) {
+//                    isConnected = true;
+//                }
+//            }
         } else {
             Log.d(WifiDirectActivity.TAG, "Initiating Chatting Connections as (NOT a groupOwner)");
             // Initiate client socket, then server socket and
             // wait for client coming to server before beginning chat
             tcpClient = new TCPClient(context, groupOwnerAddress);
             tcpClient.start();
-            if(tcpClient.isConnected()) {
-                TCPServer tcpServer = new TCPServer(context);
-                tcpServer.start();
-                if(tcpServer.isConnected()) {
-                    isConnected = true;
-                }
-            }
+//            if(tcpClient.isConnected()) {
+//                TCPServer tcpServer = new TCPServer(context);
+//                tcpServer.start();
+//                if(tcpServer.isConnected()) {
+//                    isConnected = true;
+//                }
+//            }
         }
 
         Toast.makeText(context, "chatConnectionAsyncTask finished working.", Toast.LENGTH_LONG).show();
