@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -73,6 +75,16 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         // following a connection directly
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
         ((DeviceActionListener) getActivity()).showDetails(device);
+    }
+
+    public void acknowledgeConnectionCreation(ChatConnectionAsyncTask chatConnectionAsyncTask) {
+        if(chatConnectionAsyncTask.isConnected()) {
+            Log.d(WifiDirectActivity.TAG,
+                    "Connection initiated successfully, resetting detailFragment.");
+            this.getView().setVisibility(View.GONE);
+        } else {
+            // TODO ack user to repeat in a while
+        }
     }
 
     /**
@@ -141,21 +153,16 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             progressDialog.dismiss();
         }
 
-        if (!refreshedPeers.equals(peers)) {
-            peers.clear();
-            peers.addAll(refreshedPeers);
+        peers.clear();
+        peers.addAll(refreshedPeers);
 
-            // If an AdapterView is backed by this data, notify it
-            // of the change. For instance, if you have a ListView of
-            // available peers, trigger an update.
-            ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-            Log.d(WifiDirectActivity.TAG, "WifiPeerListAdapter notified of refreshing peers.");
-            // TODO Perform any other updates needed based on the new list of
-            // peers connected to the Wi-Fi P2P network.
-        } else {
-            Log.d(WifiDirectActivity.TAG, "Refreshed peers are the some old peers.");
-
-        }
+        // If an AdapterView is backed by this data, notify it
+        // of the change. For instance, if you have a ListView of
+        // available peers, trigger an update.
+        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+        Log.d(WifiDirectActivity.TAG, "WifiPeerListAdapter notified of refreshing peers.");
+        Log.d(WifiDirectActivity.TAG, "Found " + peers.size() + " devices.");
+        Toast.makeText(getActivity(),"Found " + peers.size() + " devices.",Toast.LENGTH_SHORT).show();
 
         if (peers.size() == 0) {
             Log.d(WifiDirectActivity.TAG, "No devices found");

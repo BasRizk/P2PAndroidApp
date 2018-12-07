@@ -265,9 +265,9 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
 
     @Override
     public void acknowledgeConnectionCreation(ChatConnectionAsyncTask chatConnectionAsyncTask) {
-//        DeviceListFragment deviceListFragment = (DeviceListFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.frag_list);
-//        deviceDetailFragment.acknowledgeConnectionCreation(chatConnectionAsyncTask);
+        DeviceListFragment deviceListFragment = (DeviceListFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.frag_list);
+        deviceListFragment.acknowledgeConnectionCreation(chatConnectionAsyncTask);
 
         DeviceDetailFragment deviceDetailFragment = (DeviceDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frag_detail);
