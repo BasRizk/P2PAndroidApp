@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <LinearLayout
         android:id="@+id/chat_top_bar"
@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
+            android:id="@+id/back_button"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/message_padding"

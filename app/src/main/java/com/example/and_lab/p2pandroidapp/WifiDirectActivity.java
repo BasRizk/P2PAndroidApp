@@ -181,11 +181,16 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
 
     @Override
     public void disconnect() {
-        // TODO Acknowledging in chat fragment that user disconnected in case either client or server
         // if chat view is on
         final DeviceDetailFragment deviceDetailFragment = (DeviceDetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.frag_detail);
         deviceDetailFragment.resetViews();
+
+        final ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.chat_screen_frag);
+        chatScreenFragment.closeFragment();
+
+        Toast.makeText(this, "Connection lost", Toast.LENGTH_LONG).show();
 
         mManager.removeGroup(mChannel, new ActionListener() {
             @Override

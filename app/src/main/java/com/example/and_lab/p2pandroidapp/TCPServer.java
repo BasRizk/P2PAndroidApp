@@ -15,10 +15,23 @@ public class TCPServer {
     private ServerSocket mServerSocket;
     private Socket clientSocket;
     private int mLocalPort;
+    private boolean keepRunning;
 
     public TCPServer(Context context) {
         this.context = context;
+        keepRunning = true;
     }
+
+    public void tearDown() {
+        keepRunning = false;
+//        try {
+//            mServerSocket.close();
+//        } catch (IOException e) {
+//            Log.d(WifiDirectActivity.TAG, "problem closing server socket while tearing down");
+//            e.printStackTrace();
+//        }
+    }
+
 
     public void start() {
         try {
@@ -32,6 +45,7 @@ public class TCPServer {
             new Thread(new WorkerRunnable(clientSocket, context)).start();
             Log.d(WifiDirectActivity.TAG,
                     "Connected with client with IP/ " + clientSocket.getInetAddress().toString());
+            mServerSocket.close();
 
         } catch (IOException e) {
             // TODO notify UI
@@ -64,13 +78,16 @@ public class TCPServer {
             try {
                 InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(input);
-                while(true){
+                while(keepRunning){
                     // TODO maybe check if ready and sleep for a bit to save effort
                     receivedMessage = bufferedReader.readLine();
                     ((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
                 }
+                bufferedReader.close();
+                input.close();
             }
             catch (IOException e){
+                Log.d(WifiDirectActivity.TAG, "problem in server run thread");
                 e.printStackTrace();
             }
         }

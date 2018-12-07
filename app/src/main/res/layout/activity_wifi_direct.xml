@@ -7,6 +7,15 @@
     android:layout_height="fill_parent">
 
     <fragment
+        android:name="com.example.and_lab.p2pandroidapp.ChatScreenFragment"
+        android:id="@+id/chat_screen_frag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/chat_screen">
+        <!-- Preview: layout=@layout/row_devices -->
+    </fragment>
+
+    <fragment
         android:name="com.example.and_lab.p2pandroidapp.DeviceListFragment"
         android:id="@+id/frag_list"
         android:layout_width="match_parent"
@@ -22,16 +31,6 @@
         android:layout_height="match_parent"
         tools:layout="@layout/device_detail">
         <!-- Preview: layout=@layout/device_detail -->
-    </fragment>
-
-
-    <fragment
-        android:name="com.example.and_lab.p2pandroidapp.ChatScreenFragment"
-        android:id="@+id/chat_screen_frag"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/chat_screen">
-        <!-- Preview: layout=@layout/row_devices -->
     </fragment>
 
 </LinearLayout>

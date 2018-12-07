@@ -71,14 +71,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             }
         });
 
-        mContentView.findViewById(R.id.btn_disconnect).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ((DeviceActionListener) getActivity()).disconnect();
-                    }
-                });
-
         return mContentView;
     }
 

@@ -41,6 +41,7 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
         super.onActivityCreated(savedInstanceState);
 
         Button sendButton = (Button) mContentView.findViewById(R.id.button_chatbox_send);
+        Button backButton = (Button) mContentView.findViewById(R.id.back_button);
         sendButton.setOnClickListener( new View.OnClickListener() {
 
             @Override
@@ -48,6 +49,14 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
                 sendClicked();
             }
         });
+        backButton.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                closeFragment();
+            }
+        });
+
     }
 
     @Override
@@ -91,8 +100,16 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
         editTextChatbox.setText("");
     }
 
-    public void backClicked() {
+    public void closeConnections() {
+        tcpClient.tearDown();
+        tcpServer.tearDown();
+    }
 
+    public void closeFragment() {
+        closeConnections();
+        resetView();
+        ((DeviceActionListener) getActivity()).disconnect();
+        mContentView.setVisibility(View.GONE);
     }
 
     public void refreshView() {
@@ -102,10 +119,9 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
             chatTitle.setText(clientName);
     }
 
-
-    public void addChatConnection(TCPServer tcpServer, TCPClient tcpClient) {
-        this.tcpServer = tcpServer;
-        this.tcpClient = tcpClient;
+    public void setClientName(String name) {
+        this.clientName = name;
+        refreshView();
     }
 
     @Override
@@ -115,7 +131,6 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
         }
 
         this.info = info;
-        this.getView().setVisibility(View.VISIBLE);
 
         // Probably this btn does not matter however to keep the code safe
         if (info.groupFormed && info.isGroupOwner) {
@@ -136,6 +151,8 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
             tcpServer.start();
 
         }
+
+        this.getView().setVisibility(View.VISIBLE);
 
     }
 }
