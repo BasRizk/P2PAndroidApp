@@ -138,18 +138,20 @@ public class ChatScreenFragment extends Fragment implements ConnectionInfoListen
             // get socket accepted IP/ADDRESS and create a client socket on its server
             TCPServer tcpServer = new TCPServer(getActivity());
             tcpServer.start();
-            InetAddress clientInetAddress = tcpServer.getClientSocket().getInetAddress();
-            TCPClient tcpClient = new TCPClient(getActivity(), clientInetAddress);
-            tcpClient.start();
-
+            if(tcpServer.isConnected()) {
+                InetAddress clientInetAddress = tcpServer.getClientSocket().getInetAddress();
+                TCPClient tcpClient = new TCPClient(getActivity(), clientInetAddress);
+                tcpClient.start();
+            }
         } else if (info.groupFormed) {
             // Initiate client socket, then server socket and
             // wait for client coming to server before beginning chat
             TCPClient tcpClient = new TCPClient(getActivity(), info.groupOwnerAddress);
             tcpClient.start();
-            TCPServer tcpServer = new TCPServer(getActivity());
-            tcpServer.start();
-
+            if(tcpClient.isConnected()) {
+                TCPServer tcpServer = new TCPServer(getActivity());
+                tcpServer.start();
+            }
         }
 
         this.getView().setVisibility(View.VISIBLE);

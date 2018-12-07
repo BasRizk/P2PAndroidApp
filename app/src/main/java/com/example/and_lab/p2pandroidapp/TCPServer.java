@@ -65,6 +65,10 @@ public class TCPServer {
         return clientSocket;
     }
 
+    public boolean isConnected() {
+        return !mServerSocket.isClosed();
+    }
+
     private class WorkerRunnable implements  Runnable {
 
         private Context context;

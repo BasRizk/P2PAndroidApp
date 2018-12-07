@@ -132,4 +132,8 @@ public class TCPClient {
     public void setReceivedMessage(String receivedMessage) {
         this.receivedMessage = receivedMessage;
     }
+
+    public boolean isConnected() {
+        return clientSocket.isConnected();
+    }
 }
