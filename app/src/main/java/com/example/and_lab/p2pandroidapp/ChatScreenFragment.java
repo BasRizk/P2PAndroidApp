@@ -1,6 +1,9 @@
 package com.example.and_lab.p2pandroidapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -15,16 +18,23 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatScreenFragment extends Fragment {
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+
+public class ChatScreenFragment extends Fragment implements ConnectionInfoListener {
 
     private RecyclerView mMessageRecycler;
     private MessageListAdapter mMessageAdapter;
     private View mContentView;
     private ArrayList<Message> messageList = new ArrayList<>();
     private String clientName;
+    private TCPServer tcpServer;
+    private TCPClient tcpClient;
+    WifiP2pInfo info;
+    ProgressDialog progressDialog;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -56,11 +66,13 @@ public class ChatScreenFragment extends Fragment {
     }
 
     public void sendClicked() {
+
         TextView editTextChatbox = (TextView) (mContentView.findViewById(R.id.edittext_chatbox));
 
         if(editTextChatbox.getText() != null && editTextChatbox.getText().toString() != null
                 && !editTextChatbox.getText().toString().equals("")) {
             String messageText = editTextChatbox.getText().toString();
+            tcpClient.sendMessage(messageText);
             createMessage(messageText, true);
             editTextChatbox.setText("");
         }
@@ -90,4 +102,40 @@ public class ChatScreenFragment extends Fragment {
             chatTitle.setText(clientName);
     }
 
+
+    public void addChatConnection(TCPServer tcpServer, TCPClient tcpClient) {
+        this.tcpServer = tcpServer;
+        this.tcpClient = tcpClient;
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
+        this.info = info;
+        this.getView().setVisibility(View.VISIBLE);
+
+        // Probably this btn does not matter however to keep the code safe
+        if (info.groupFormed && info.isGroupOwner) {
+            // Initiate Server Socket, then wait for socket to accept
+            // get socket accepted IP/ADDRESS and create a client socket on its server
+            TCPServer tcpServer = new TCPServer(getActivity());
+            tcpServer.start();
+            InetAddress clientInetAddress = tcpServer.getClientSocket().getInetAddress();
+            TCPClient tcpClient = new TCPClient(getActivity(), clientInetAddress);
+            tcpClient.start();
+
+        } else if (info.groupFormed) {
+            // Initiate client socket, then server socket and
+            // wait for client coming to server before beginning chat
+            TCPClient tcpClient = new TCPClient(getActivity(), info.groupOwnerAddress);
+            tcpClient.start();
+            TCPServer tcpServer = new TCPServer(getActivity());
+            tcpServer.start();
+
+        }
+
+    }
 }

@@ -69,7 +69,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
      */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO now it directs to the detailsList fragment through the WifiDirectActivity (MainActivity)
         // it may be needed to be directed accordingly to chat page (fragment)
         // following a connection directly
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
@@ -101,7 +100,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             }
             WifiP2pDevice device = items.get(position);
             if (device != null) {
-                // TODO viewAdapter case in case of chatting (may be left as it is)
                 TextView top = (TextView) v.findViewById(R.id.device_name);
                 TextView bottom = (TextView) v.findViewById(R.id.device_details);
                 if (top != null) {

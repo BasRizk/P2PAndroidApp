@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
@@ -32,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
  */
 public class WifiDirectActivity extends AppCompatActivity implements ChannelListener, DeviceActionListener {
     public final static String TAG = "WifiDirect";
+    public final static int PORT_NUM = 8988;
 
     private boolean isWifiP2pEnabled = false;
     private boolean retryChannel = false;
@@ -105,7 +105,6 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO button for go back to logs of chats instead of full chat fragment
         // bearing in mind that the discovery will be using a pop up fragment like dialog (maybe)
         switch (item.getItemId()) {
             case R.id.atn_direct_enable:
@@ -159,10 +158,6 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
             @Override
             public void onSuccess() {
                 Log.d(WifiDirectActivity.TAG, "Connection succeeded.");
-                // TODO 1: ChattingWindowFragment implementation (instead of DeviceDetailFragment)
-                // TODO 2: maybe the beginning of chat connection here however leave this part for now
-                // TODO    as WifiDirectBroadcastReceiver seems to send this task to DeviceDetailFragment
-
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
             }
             @Override
@@ -254,36 +249,16 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
             }
         }
     }
+    @Override
+    public void createMessageFromServer(String text, Boolean isSender) {
+        Log.d(WifiDirectActivity.TAG,"CreateMessageFromServer entered");
+        final ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.chat_screen_frag);
+        chatScreenFragment.createMessage(text, false);
+    }
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
-
-
-    /*
-    // NOT USED METHOD FOR NOW (IGNORE)
-    public void createGroup() {
-        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-            @Override
-            public void onSuccess() {
-                // Device is ready to accept incoming connections from peers.
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Toast.makeText(activity, "P2P group creation failed. Retry.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-            @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group) {
-                // TODO if needed to retrieve group info including peers on the network
-            }
-        });
-    }
-
-    */
 
 }
