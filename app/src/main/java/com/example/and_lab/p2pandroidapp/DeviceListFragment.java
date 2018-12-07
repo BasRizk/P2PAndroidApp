@@ -177,7 +177,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                 true, new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        // TODO in case of needed feature after canceling the discovery loading
                         // TODO might actually be needed to automatically initiate discovery once app is loaded
                     }
                 });
