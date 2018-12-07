@@ -20,7 +20,8 @@ public class TCPServer {
 
     public TCPServer(Context context) {
         this.context = context;
-        keepRunning = true;
+        this.keepRunning = true;
+        this.mLocalPort = WifiDirectActivity.PORT_NUM;
     }
 
     public void tearDown() {
@@ -37,7 +38,7 @@ public class TCPServer {
     public void start() {
         try {
             // Initialize a server socket on the next available port.
-            mServerSocket = new ServerSocket(0);
+            mServerSocket = new ServerSocket(this.mLocalPort);
             // Store the chosen port.
             mLocalPort = mServerSocket.getLocalPort();
             Log.d(WifiDirectActivity.TAG, "Initiated ServerSocket on port " + mLocalPort);
