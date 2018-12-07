@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
@@ -36,7 +37,8 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
             tcpServer = new TCPServer(context);
             tcpServer.start();
             if(tcpServer.isConnected()) {
-                InetAddress clientInetAddress = tcpServer.getClientSocket().getInetAddress();
+                InetAddress clientInetAddress =
+                        ((InetSocketAddress) tcpServer.getClientSocket().getRemoteSocketAddress()).getAddress();
                 TCPClient tcpClient = new TCPClient(context, clientInetAddress);
                 tcpClient.start();
                 if(tcpClient.isConnected()) {
