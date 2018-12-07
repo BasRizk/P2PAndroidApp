@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.net.InetAddress;
+
 
 /**
  * A fragment that manages a particular peer and allows interaction with device
@@ -32,6 +34,8 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     private WifiP2pDevice device;
     private WifiP2pInfo info;
     ProgressDialog progressDialog = null;
+    private TCPClient tcpClient = null;
+    private TCPConnection tcpServer = null;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -146,6 +150,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         // After the group negotiation, we can determine the group owner
         // (server).
         if (info.groupFormed && info.isGroupOwner) {
+
             // Do whatever tasks are specific to the group owner.
             // One common case is creating a group owner thread and accepting
             // incoming connections.
@@ -153,18 +158,23 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             // TODO ChattingServerTask implementation (probably async task as well)
             new FileServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text))
                     .execute();
+            if(info.groupOwnerAddress.toString() == this.device.deviceAddress) {
+                // Meaning
+            }
         } else if (info.groupFormed) {
             // The other device acts as the peer (client). In this case,
             // you'll want to create a peer thread that connects
             // to the group owner.
             // TODO TcpClientConnection implementation where the client (not the group owner) does his work
+            ((DeviceActionListener) getActivity()).initializeChatTCPConnection(new TCPClient(getActivity(), info.groupOwnerAddress));
+
 
             // The other device acts as the client. In this case, we enable the
             // get file button.
-            // TODO Erase this of course!
-            mContentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
-            ((TextView) mContentView.findViewById(R.id.status_text)).setText(getResources()
-                    .getString(R.string.client_text));
+//            // TODO Erase this of course!
+//            mContentView.findViewById(R.id.btn_start_client).setVisibility(View.VISIBLE);
+//            ((TextView) mContentView.findViewById(R.id.status_text)).setText(getResources()
+//                    .getString(R.string.client_text));
         }
 
         // hide the connect button

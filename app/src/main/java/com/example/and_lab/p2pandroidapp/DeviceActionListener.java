@@ -12,4 +12,6 @@ public interface DeviceActionListener {
     void cancelDisconnect();
     void connect(WifiP2pConfig config);
     void disconnect();
+    void initializeChatTCPConnection(TCPClient tcpClient);
+    void createMessageFromServer(String text, Boolean isSender);
 }

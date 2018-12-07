@@ -19,9 +19,6 @@ public class TCPClient {
     private String recieved_message;
     private Context context;
 
-    private static final String TAG = "TCP";
-
-
     public TCPClient(Context context, InetAddress IP_address){
         this.IP_address = IP_address;
         this.context = context;
@@ -32,8 +29,16 @@ public class TCPClient {
             clientSocket = new Socket(IP_address,0);
             dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
             inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
-            BufferedReader coming_message = new BufferedReader(inputStreamReader);
-            recieved_message = coming_message.readLine();
+            final BufferedReader coming_message = new BufferedReader(inputStreamReader);
+            new Thread(){
+                public void run(){
+                    try {
+                        recieved_message = coming_message.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,6 +47,7 @@ public class TCPClient {
     public void sendMessage(String message){
         try {
             dataOutputStream.writeBytes(message + "\n");
+            Log.d(WifiDirectActivity.TAG,"Message : " + message + " was sent successfully");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,7 +57,7 @@ public class TCPClient {
         try {
             clientSocket.close();
         } catch (IOException e) {
-            Log.e(TAG,"Error Closing the TCP Server");
+            Log.e(WifiDirectActivity.TAG,"Error Closing the TCP Server");
             e.printStackTrace();
         }
     }

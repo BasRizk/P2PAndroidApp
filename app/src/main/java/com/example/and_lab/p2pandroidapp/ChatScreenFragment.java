@@ -24,6 +24,7 @@ public class ChatScreenFragment extends Fragment {
     private MessageListAdapter mMessageAdapter;
     private View mContentView;
     private ArrayList<Message> messageList = new ArrayList<>();
+    private TCPClient tcpClient;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -70,11 +71,13 @@ public class ChatScreenFragment extends Fragment {
     }
 
     public void sendClicked() {
+
         TextView editTextChatbox = (TextView) (mContentView.findViewById(R.id.edittext_chatbox));
 
         if(editTextChatbox.getText() != null && editTextChatbox.getText().toString() != null
                 && !editTextChatbox.getText().toString().equals("")) {
             String messageText = editTextChatbox.getText().toString();
+            tcpClient.sendMessage(messageText);
             createMessage(messageText, true);
             editTextChatbox.setText("");
         }
@@ -86,4 +89,7 @@ public class ChatScreenFragment extends Fragment {
         mMessageRecycler.scrollToPosition(messageList.size() - 1);
     }
 
+    public void addChatConnection(TCPClient tcpClient) {
+        this.tcpClient = tcpClient;
+    }
 }
