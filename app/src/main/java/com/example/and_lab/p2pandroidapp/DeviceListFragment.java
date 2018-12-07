@@ -27,7 +27,7 @@ import java.util.List;
 
 public class DeviceListFragment extends ListFragment implements PeerListListener {
 
-    private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+    private ArrayList<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
 
     ProgressDialog progressDialog = null;
     View mContentView = null;
@@ -36,7 +36,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
+        this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, (ArrayList<WifiP2pDevice>) peers));
     }
 
     @Override
@@ -91,14 +91,14 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
      * Array adapter for ListFragment that maintains WifiP2pDevice list.
      */
     private class WiFiPeerListAdapter extends ArrayAdapter<WifiP2pDevice> {
-        private List<WifiP2pDevice> items;
+        private ArrayList<WifiP2pDevice> items;
         /**
          * @param context
          * @param textViewResourceId
          * @param objects
          */
         public WiFiPeerListAdapter(Context context, int textViewResourceId,
-                                   List<WifiP2pDevice> objects) {
+                                   ArrayList<WifiP2pDevice> objects) {
             super(context, textViewResourceId, objects);
             items = objects;
         }
@@ -146,15 +146,23 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
 
-        List<WifiP2pDevice> refreshedPeers =
-                new ArrayList<WifiP2pDevice>(peerList.getDeviceList());
+        ArrayList<WifiP2pDevice> refreshedPeers =
+                new ArrayList<WifiP2pDevice>();
+
+        for (WifiP2pDevice peer : peerList.getDeviceList()) {
+            refreshedPeers.add(peer);
+        }
 
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
 
         peers.clear();
-        peers.addAll(refreshedPeers);
+
+        for (WifiP2pDevice peer : refreshedPeers) {
+            peers.add(peer);
+            ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+        }
 
         // If an AdapterView is backed by this data, notify it
         // of the change. For instance, if you have a ListView of
