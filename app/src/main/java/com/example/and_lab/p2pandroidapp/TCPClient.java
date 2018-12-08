@@ -2,52 +2,49 @@ package com.example.and_lab.p2pandroidapp;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class TCPClient {
 
     private static final int SOCKET_TIMEOUT = 5000;
 
-    private InetAddress IpAddress;
-    private Socket clientSocket;
-    private DataOutputStream dataOutputStream;
-    private InputStreamReader inputStreamReader;
+    private InetAddress mInetAddress;
+    private int mPortNum;
+    private Socket mClientSocket;
+    private DataOutputStream mDataOutputStream;
+    private InputStreamReader mInputStreamReader;
     private String receivedMessage;
-    private Context context;
-    private int portNum;
     private Thread acceptingMessagesThread;
     private int connectionRetries;
 
-    public TCPClient(Context context, InetAddress IpAddress){
-        this.IpAddress = IpAddress;
+    private Context context;
+
+
+    public TCPClient(Context context, InetAddress mInetAddress){
+        this.mInetAddress = mInetAddress;
         this.context = context;
-        this.portNum = WifiDirectActivity.PORT_NUM;
+        this.mPortNum = WifiDirectActivity.PORT_NUM;
         this.connectionRetries = 5;
     }
 
     protected void start(){
         try {
-            IpAddress.getHostAddress();
+            //mClientSocket = new Socket();
+            //mClientSocket.bind(null);
+            //mClientSocket.connect((new InetSocketAddress(mInetAddress.getHostAddress(), mPortNum)), SOCKET_TIMEOUT);
 
-            //clientSocket = new Socket();
-            //clientSocket.bind(null);
-            //clientSocket.connect((new InetSocketAddress(IpAddress.getHostAddress(), portNum)), SOCKET_TIMEOUT);
+            mClientSocket = new Socket(mInetAddress, mPortNum);
 
-            clientSocket = new Socket(IpAddress, portNum);
-            dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
-            inputStreamReader = new InputStreamReader(clientSocket.getInputStream());
+            mDataOutputStream = new DataOutputStream(mClientSocket.getOutputStream());
+            mInputStreamReader = new InputStreamReader(mClientSocket.getInputStream());
             Log.d(WifiDirectActivity.TAG,
-                    "Initiated ClientSocket to IP/ " + IpAddress + ", PortNum/ " + portNum);
-            final BufferedReader comingMessage = new BufferedReader(inputStreamReader);
+                    "Initiated ClientSocket to IP/ " + mInetAddress + ", PortNum/ " + mPortNum);
+            final BufferedReader comingMessage = new BufferedReader(mInputStreamReader);
             acceptingMessagesThread = new Thread(){
                 public void run(){
                     try {
@@ -61,7 +58,7 @@ public class TCPClient {
 
             Log.d(WifiDirectActivity.TAG,
                     "Starting thread accepting messages by ClientSocket with " +
-                    "IP/" + IpAddress + ",PortNum/" + portNum);
+                    "IP/" + mInetAddress + ",PortNum/" + mPortNum);
 
         } catch (IOException e) {
             Log.e(WifiDirectActivity.TAG, e.getMessage());
@@ -69,13 +66,15 @@ public class TCPClient {
             try {
 
                 if(connectionRetries > 0) {
-                    Toast.makeText(context,"Retrying to connect in 1 second.",Toast.LENGTH_SHORT).show();
+                    Log.d(WifiDirectActivity.TAG,
+                            "Retrying to connect in 1 second.");
                     Thread.sleep(1000);
                     connectionRetries--;
                     this.start();
                 }
                 else {
-                    Toast.makeText(context, "Failed to connect,please try again later.", Toast.LENGTH_LONG).show();
+                    Log.d(WifiDirectActivity.TAG,
+                            "Failed to connect,please try again later.");
                 }
             } catch (InterruptedException e1) {
                 Log.e(WifiDirectActivity.TAG, e1.getMessage());
@@ -85,7 +84,7 @@ public class TCPClient {
 
     protected void sendMessage(String message){
         try {
-            dataOutputStream.writeBytes(message + "\n");
+            mDataOutputStream.writeBytes(message + "\n");
             Log.d(WifiDirectActivity.TAG,"Message: " + message + " was sent successfully");
         } catch (IOException e) {
             Log.e(WifiDirectActivity.TAG, e.getMessage());
@@ -94,43 +93,43 @@ public class TCPClient {
 
     protected void tearDown() {
         try {
-            clientSocket.close();
+            mClientSocket.close();
         } catch (IOException e) {
             Log.e(WifiDirectActivity.TAG, e.getMessage());
             Log.e(WifiDirectActivity.TAG,"Error Closing the TCP Server");
         }
     }
 
-    public InetAddress getIpAddress() {
-        return IpAddress;
+    public InetAddress getmInetAddress() {
+        return mInetAddress;
     }
 
-    public void setIpAddress(InetAddress ipAddress) {
-        this.IpAddress = ipAddress;
+    public void setmInetAddress(InetAddress mInetAddress) {
+        this.mInetAddress = mInetAddress;
     }
 
-    public Socket getClientSocket() {
-        return clientSocket;
+    public Socket getmClientSocket() {
+        return mClientSocket;
     }
 
-    public void setClientSocket(Socket clientSocket) {
-        this.clientSocket = clientSocket;
+    public void setmClientSocket(Socket mClientSocket) {
+        this.mClientSocket = mClientSocket;
     }
 
-    public DataOutputStream getDataOutputStream() {
-        return dataOutputStream;
+    public DataOutputStream getmDataOutputStream() {
+        return mDataOutputStream;
     }
 
-    public void setDataOutputStream(DataOutputStream dataOutputStream) {
-        this.dataOutputStream = dataOutputStream;
+    public void setmDataOutputStream(DataOutputStream mDataOutputStream) {
+        this.mDataOutputStream = mDataOutputStream;
     }
 
-    public InputStreamReader getInputStreamReader() {
-        return inputStreamReader;
+    public InputStreamReader getmInputStreamReader() {
+        return mInputStreamReader;
     }
 
-    public void setInputStreamReader(InputStreamReader inputStreamReader) {
-        this.inputStreamReader = inputStreamReader;
+    public void setmInputStreamReader(InputStreamReader mInputStreamReader) {
+        this.mInputStreamReader = mInputStreamReader;
     }
 
     public String getReceivedMessage() {
@@ -142,6 +141,6 @@ public class TCPClient {
     }
 
     public boolean isConnected() {
-        return clientSocket.isConnected();
+        return mClientSocket.isConnected();
     }
 }

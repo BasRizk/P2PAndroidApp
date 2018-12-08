@@ -2,8 +2,6 @@ package com.example.and_lab.p2pandroidapp;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,14 +49,8 @@ public class TCPServer {
         } catch (IOException e) {
             Log.e(WifiDirectActivity.TAG, e.getMessage());
             Log.d(WifiDirectActivity.TAG,"Server failed to initiate connection on port " + mLocalPort);
-            Toast.makeText(context,"Server failed to connect, please try again later.",Toast.LENGTH_LONG);
         }
 
-
-    }
-
-    protected int getLocalPort() {
-        return mLocalPort;
     }
 
     protected Socket getClientSocket() {

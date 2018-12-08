@@ -255,6 +255,7 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
             }
         }
     }
+
     @Override
     public void createMessageFromServer(String text, Boolean isSender) {
         Log.d(WifiDirectActivity.TAG,"CreateMessageFromServer entered");
@@ -287,5 +288,4 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
-
 }

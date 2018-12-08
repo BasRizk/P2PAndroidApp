@@ -1,5 +1,6 @@
 package com.example.and_lab.p2pandroidapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
@@ -26,12 +27,19 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected void onPreExecute() {
+        super.onPreExecute();
         Toast.makeText(context, "ChatConnectionAsyncTask began working", Toast.LENGTH_LONG).show();
-
         Log.d(WifiDirectActivity.TAG, "ChatConnectionAsyncTask is working.");
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
+
+        // TODO remove toasts and logs from here or wrap them in runOnUIThread()
+        // TODO dig into TCPServer and tcpClient Logs as well.
+
         if(isGroupOwner) {
-            Log.d(WifiDirectActivity.TAG, "Initiating Chatting Connections as (a groupOwner)");
             // Initiate Server Socket, then wait for socket to accept
             // get socket accepted IP/ADDRESS and create a client socket on its server
             tcpServer = new TCPServer(context);
@@ -46,7 +54,6 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
                 }
             }
         } else {
-            Log.d(WifiDirectActivity.TAG, "Initiating Chatting Connections as (NOT a groupOwner)");
             // Initiate client socket, then server socket and
             // wait for client coming to server before beginning chat
             tcpClient = new TCPClient(context, groupOwnerAddress);
@@ -60,15 +67,14 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
             }
         }
 
-        Toast.makeText(context, "chatConnectionAsyncTask finished working.", Toast.LENGTH_LONG).show();
-
-
 
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        Toast.makeText(context, "chatConnectionAsyncTask finished working.", Toast.LENGTH_LONG).show();
         Log.d(WifiDirectActivity.TAG, "Finished initiating ChattingConnectionAsyncTask," +
                 " and Connection = " + isConnected);
         ((DeviceActionListener)context).acknowledgeConnectionCreation(this);
@@ -84,6 +90,16 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
 
     public TCPClient getTCPClient() {
         return tcpClient;
+    }
+
+    public static void debugAndToastOnUIThread(final Context context, final String strToToast) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(WifiDirectActivity.TAG, strToToast);
+                Toast.makeText(context, strToToast, Toast.LENGTH_SHORT);
+            }
+        });
     }
 }
 
