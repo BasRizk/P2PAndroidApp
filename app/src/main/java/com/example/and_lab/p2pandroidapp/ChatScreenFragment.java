@@ -79,11 +79,14 @@ public class ChatScreenFragment extends Fragment {
         TextView editTextChatbox = (TextView) (mContentView.findViewById(R.id.edittext_chatbox));
 
         if(editTextChatbox.getText() != null && editTextChatbox.getText().toString() != null
-                && !editTextChatbox.getText().toString().equals("")) {
+                && !editTextChatbox.getText().toString().equals("")
+                && tcpClient!= null) {
             String messageText = editTextChatbox.getText().toString();
             tcpClient.sendMessage(messageText);
             createMessage(messageText, true);
             editTextChatbox.setText("");
+        } else if(tcpClient == null) {
+            Log.e(WifiDirectActivity.TAG, "ChatScreenFragment:: (sendClicked()) : tcpClient  == null");
         }
     }
 
