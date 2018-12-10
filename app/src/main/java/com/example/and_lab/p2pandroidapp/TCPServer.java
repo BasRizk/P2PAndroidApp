@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.Buffer;
 
 public class TCPServer {
 
@@ -77,16 +78,22 @@ public class TCPServer {
 
         public void  run(){
             try {
-                InputStreamReader input = new InputStreamReader(clientSocket.getInputStream());
-                BufferedReader bufferedReader = new BufferedReader(input);
+
+                BufferedReader bufferedReader = null;
+
                 while(keepRunning){
                     // TODO maybe check if ready and sleep for a bit to save effort
+                    bufferedReader = new BufferedReader(
+                            new InputStreamReader(clientSocket.getInputStream()));
                     receivedMessage = bufferedReader.readLine();
-                    actOnUi(context, receivedMessage);
+                    Log.d(WifiDirectActivity.TAG,
+                            "TCPServer :: WorkerRunnable :: received message : " + receivedMessage);
+                    //actOnUi(context, receivedMessage);
                     //((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
                 }
-                bufferedReader.close();
-                input.close();
+                if(bufferedReader != null) {
+                    bufferedReader.close();
+                }
             }
             catch (IOException e){
                 Log.e(WifiDirectActivity.TAG, e.getMessage());
