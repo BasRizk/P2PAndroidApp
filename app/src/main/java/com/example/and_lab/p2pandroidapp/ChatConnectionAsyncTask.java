@@ -47,7 +47,7 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
             if(tcpServer.isConnected()) {
                 InetAddress clientInetAddress =
                         ((InetSocketAddress) tcpServer.getClientSocket().getRemoteSocketAddress()).getAddress();
-                TCPClient tcpClient = new TCPClient(context, clientInetAddress);
+                tcpClient = new TCPClient(context, clientInetAddress);
                 tcpClient.start();
                 if(tcpClient.isConnected()) {
                     isConnected = true;
@@ -59,7 +59,7 @@ public class ChatConnectionAsyncTask extends AsyncTask<Void, Void, Void> {
             tcpClient = new TCPClient(context, groupOwnerAddress);
             tcpClient.start();
             if(tcpClient.isConnected()) {
-                TCPServer tcpServer = new TCPServer(context);
+                tcpServer = new TCPServer(context);
                 tcpServer.start();
                 if(tcpServer.isConnected()) {
                     isConnected = true;
