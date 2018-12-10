@@ -84,6 +84,10 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             this.getView().setVisibility(View.GONE);
         } else {
             // TODO ack user to repeat in a while
+            Log.d(WifiDirectActivity.TAG,
+                    "Connection initiated successfully, resetting detailFragment.");
+            Toast.makeText(getActivity(),
+                    "Connection failed, please try again in a while.", Toast.LENGTH_SHORT);
         }
     }
 
