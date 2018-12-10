@@ -143,8 +143,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         view.setText(R.string.empty);
         view = mContentView.findViewById(R.id.group_owner);
         view.setText(R.string.empty);
-        view = mContentView.findViewById(R.id.status_text);
-        view.setText(R.string.empty);
         connectBtnClicked = false;
         this.getView().setVisibility(View.GONE);
     }
