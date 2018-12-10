@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -104,10 +105,10 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
         if(connectBtnClicked) {
             if (info.groupFormed) {
+                Toast.makeText(getActivity(), "Initiating ChatConnection", Toast.LENGTH_SHORT).show();
                 chatConnectionAsyncTask = new ChatConnectionAsyncTask(getActivity(), info.groupOwnerAddress, info.isGroupOwner);
                 chatConnectionAsyncTask.execute();
             }
-            connectBtnClicked = false;
         }
 
 
@@ -144,6 +145,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         view.setText(R.string.empty);
         view = mContentView.findViewById(R.id.status_text);
         view.setText(R.string.empty);
+        connectBtnClicked = false;
         this.getView().setVisibility(View.GONE);
     }
 
@@ -151,10 +153,10 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         if(chatConnectionAsyncTask.isConnected()) {
             Log.d(WifiDirectActivity.TAG,
                     "Connection initiated successfully, resetting detailFragment.");
-            resetViews();
             //this.getView().setVisibility(View.GONE);
         } else {
             // TODO ack user to repeat in a while
         }
+        resetViews();
     }
 }
