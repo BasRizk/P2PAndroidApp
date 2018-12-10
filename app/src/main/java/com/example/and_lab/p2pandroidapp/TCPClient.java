@@ -39,8 +39,6 @@ public class TCPClient {
             //mClientSocket.connect((new InetSocketAddress(mInetAddress.getHostAddress(), mPortNum)), SOCKET_TIMEOUT);
 
             mClientSocket = new Socket(mInetAddress, mPortNum);
-
-            mDataOutputStream = new DataOutputStream(mClientSocket.getOutputStream());
             mInputStreamReader = new InputStreamReader(mClientSocket.getInputStream());
             Log.d(WifiDirectActivity.TAG,
                     "Initiated ClientSocket to IP/ " + mInetAddress + ", PortNum/ " + mPortNum);
@@ -82,13 +80,22 @@ public class TCPClient {
         }
     }
 
-    protected void sendMessage(String message){
-        try {
-            mDataOutputStream.writeBytes(message + "\n");
-            Log.d(WifiDirectActivity.TAG,"Message: " + message + " was sent successfully");
-        } catch (IOException e) {
-            Log.e(WifiDirectActivity.TAG, e.getMessage());
-        }
+
+    protected void sendMessage(final String message){
+        Thread messageThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mDataOutputStream = new DataOutputStream(mClientSocket.getOutputStream());
+                    mDataOutputStream.writeBytes(message + "\n");
+                    Log.d(WifiDirectActivity.TAG,"Message: " + message + " was sent successfully");
+                } catch (IOException e) {
+                    Log.e(WifiDirectActivity.TAG, e.getMessage());
+                }
+            }
+        });
+        messageThread.start();
+
     }
 
     protected void tearDown() {
