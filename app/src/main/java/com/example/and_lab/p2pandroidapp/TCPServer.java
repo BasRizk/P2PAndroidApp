@@ -1,7 +1,10 @@
 package com.example.and_lab.p2pandroidapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -79,7 +82,8 @@ public class TCPServer {
                 while(keepRunning){
                     // TODO maybe check if ready and sleep for a bit to save effort
                     receivedMessage = bufferedReader.readLine();
-                    ((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
+                    actOnUi(context, receivedMessage);
+                    //((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
                 }
                 bufferedReader.close();
                 input.close();
@@ -91,4 +95,14 @@ public class TCPServer {
         }
     }
 
+    public static void actOnUi(final Context context, final String receivedMessage) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(WifiDirectActivity.TAG, "Message Received: "  + receivedMessage);
+                ((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
+
+            }
+        });
+    }
 }

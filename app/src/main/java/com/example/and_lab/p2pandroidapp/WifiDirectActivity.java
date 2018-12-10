@@ -260,7 +260,7 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
     @Override
     public void createMessageFromServer(String text, Boolean isSender) {
         Log.d(WifiDirectActivity.TAG,"CreateMessageFromServer entered");
-        final ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
+        ChatScreenFragment chatScreenFragment = (ChatScreenFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.chat_screen_frag);
         chatScreenFragment.createMessage(text, false);
     }
