@@ -91,7 +91,7 @@ public class TCPServer {
                     if(receivedMessage != null) {
                         Log.d(WifiDirectActivity.TAG,
                                 "TCPServer :: WorkerRunnable :: received message : " + receivedMessage);
-                        //actOnUi(context, receivedMessage);
+                        actOnUi(context, receivedMessage);
                         //((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
                     } else {
                         try {
