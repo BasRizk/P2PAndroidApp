@@ -45,6 +45,7 @@ public class WifiDirectActivity extends AppCompatActivity implements ChannelList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate :: BEGIN");
         setContentView(R.layout.activity_wifi_direct);
 
         // Indicates a change in the Wi-Fi P2P status.
