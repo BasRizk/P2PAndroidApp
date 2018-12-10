@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.Buffer;
 
+import static java.lang.Thread.sleep;
+
 public class TCPServer {
 
     private Context context;
@@ -86,10 +88,19 @@ public class TCPServer {
                     bufferedReader = new BufferedReader(
                             new InputStreamReader(clientSocket.getInputStream()));
                     receivedMessage = bufferedReader.readLine();
-                    Log.d(WifiDirectActivity.TAG,
-                            "TCPServer :: WorkerRunnable :: received message : " + receivedMessage);
-                    //actOnUi(context, receivedMessage);
-                    //((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
+                    if(receivedMessage != null) {
+                        Log.d(WifiDirectActivity.TAG,
+                                "TCPServer :: WorkerRunnable :: received message : " + receivedMessage);
+                        //actOnUi(context, receivedMessage);
+                        //((DeviceActionListener) context).createMessageFromServer(receivedMessage, false);
+                    } else {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            Log.e(WifiDirectActivity.TAG, e.getMessage());
+                        }
+                    }
+
                 }
                 if(bufferedReader != null) {
                     bufferedReader.close();
